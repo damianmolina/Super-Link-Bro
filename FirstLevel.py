@@ -9,9 +9,13 @@ def drawFirstLevel(app):
         drawCell(app, app.rows, col)
 
 def drawCell(app, row, col):
+    if (col % 2 == 0):
+        color = 'black'
+    else:
+        color = 'red'
     cellLeft, cellTop = getCellLeftTop(app, row, col)
     cellWidth, cellHeight = getCellSize(app)
-    drawRect(cellLeft, cellTop, cellWidth, cellHeight, fill = 'black',
+    drawRect(cellLeft, cellTop, cellWidth, cellHeight, fill = color,
              border='black', borderWidth = app.cellBorderWidth)
 
 def getCellLeftTop(app, row, col):

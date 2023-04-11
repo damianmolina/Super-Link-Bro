@@ -16,7 +16,7 @@ class Link:
         self.topY = 355
         self.lookingRight = True
         self.isJumping = False
-        self.speed = 6
+        self.moveSpeed = 10
 
     def move(self, app, dir):
         if (dir > 0):
@@ -25,8 +25,8 @@ class Link:
                 self.lookingRight = True
             
             if (self.leftX + 14.5 >= app.width//2):
-                app.levelLeft -= self.speed
-            self.leftX += self.speed
+                app.levelLeft -= self.moveSpeed
+            self.leftX += self.moveSpeed
 
         elif (dir < 0 and not self.leftX < app.levelLeft):
             if (self.lookingRight):
@@ -34,8 +34,8 @@ class Link:
                 self.lookingRight = False
             
             if (self.leftX - 14.5 <= app.width//2 and app.levelLeft < 0):
-                app.levelLeft += self.speed
-            self.leftX -= self.speed
+                app.levelLeft += self.moveSpeed
+            self.leftX -= self.moveSpeed
     
     def jump(self):
         force = 0.5 * Link.mass * (Link.velocity**2)
