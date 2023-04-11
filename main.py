@@ -69,7 +69,7 @@ def onStep(app):
         app.link.move(app, 1)
     elif (app.moveLeft):
         app.link.move(app, -1)
-    elif (app.link.isJumping):
+    if (app.link.isJumping):
         app.link.jump()
 
     
