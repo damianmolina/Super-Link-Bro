@@ -16,18 +16,26 @@ class Link:
         self.topY = 355
         self.lookingRight = True
         self.isJumping = False
+        self.speed = 6
 
-    def move(self, dir):
+    def move(self, app, dir):
         if (dir > 0):
             if (not self.lookingRight):
                 self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
                 self.lookingRight = True
-            self.leftX += 3
-        else:
+            
+            if (self.leftX + 14.5 >= app.width//2):
+                app.levelLeft -= self.speed
+            self.leftX += self.speed
+
+        elif (dir < 0 and not self.leftX < app.levelLeft):
             if (self.lookingRight):
                 self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
                 self.lookingRight = False
-            self.leftX -= 3
+            
+            if (self.leftX - 14.5 <= app.width//2 and app.levelLeft < 0):
+                app.levelLeft += self.speed
+            self.leftX -= self.speed
     
     def jump(self):
         force = 0.5 * Link.mass * (Link.velocity**2)

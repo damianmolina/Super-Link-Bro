@@ -4,7 +4,7 @@ from Characters import *
 
 def drawFirstLevel(app):
     # First draw the background
-    drawImage(CMUImage(app.firstLevel), 0, 0)
+    drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
     for col in range(app.cols):
         drawCell(app, app.rows, col)
 

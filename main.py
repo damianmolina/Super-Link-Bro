@@ -7,6 +7,7 @@ def onAppStart(app):
     # Screen width and height
     app.width = 896
     app.height = 448
+    app.stepsPerSecond = 15
 
     # Get the first level image
     app.firstLevel = Image.open('Images/Mario 1-1.png')
@@ -62,10 +63,12 @@ def onKeyRelease(app, key):
 
 def onStep(app):
     if (app.moveRight):
-        app.link.move(1)
+        app.link.move(app, 1)
     elif (app.moveLeft):
-        app.link.move(-1)
+        app.link.move(app, -1)
     elif (app.link.isJumping):
         app.link.jump()
+
+    
 
 runApp(app.width, app.height)
