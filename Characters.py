@@ -10,10 +10,10 @@ class Link:
         linkSpriteSheet = linkSpriteSheet.resize((268, 228))
         linkSpriteSheet = linkSpriteSheet.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         self.walk = linkSpriteSheet.crop((53, 0, 106, 50))
-        self.bow = linkSpriteSheet.crop((65, 121, 130, 165))
+        self.bow = linkSpriteSheet.crop((72, 121, 125, 171))
         self.image = self.bow
         self.leftX = 0
-        self.topY = 355
+        self.topY = 358
         self.lookingRight = True
         self.isJumping = False
         self.moveSpeed = 10
@@ -26,7 +26,8 @@ class Link:
             
             if (self.leftX + 14.5 >= app.width//2):
                 app.levelLeft -= self.moveSpeed
-            self.leftX += self.moveSpeed
+            else:
+                self.leftX += self.moveSpeed
 
         elif (dir < 0 and not self.leftX < app.levelLeft):
             if (self.lookingRight):
@@ -35,7 +36,8 @@ class Link:
             
             if (self.leftX - 14.5 <= app.width//2 and app.levelLeft < 0):
                 app.levelLeft += self.moveSpeed
-            self.leftX -= self.moveSpeed
+            else:
+                self.leftX -= self.moveSpeed
     
     def jump(self):
         force = 0.5 * Link.mass * (Link.velocity**2)

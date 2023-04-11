@@ -11,9 +11,7 @@ def onAppStart(app):
 
     # Get the first level image
     app.firstLevel = Image.open('Images/Mario 1-1.png')
-    print(app.firstLevel.size)
     app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
-    print(app.firstLevel.size)
     
     # Create Link object
     app.link = Link()
@@ -34,6 +32,9 @@ def onAppStart(app):
     app.levelWidth = 6768
     app.levelHeight = 400
     app.cellBorderWidth = 1
+
+    # Collision blocks
+    app.collisionBlocks = []
 
 
 def redrawAll(app):
