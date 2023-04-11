@@ -13,7 +13,6 @@ def onAppStart(app):
     app.labelY = 0
     app.moveRight = False
     app.moveLeft = False
-    app.jump = False
 
 
 def redrawAll(app):
@@ -30,6 +29,8 @@ def onKeyPress(app, key):
         app.moveRight = True
     elif (key == 'left'):
         app.moveLeft = True
+    elif (key == 'up' and app.link.isJumping == False):
+        app.link.isJumping = True
 
 def onKeyRelease(app, key):
     if (key == 'right'):
@@ -43,5 +44,7 @@ def onStep(app):
         app.link.move(1)
     elif (app.moveLeft):
         app.link.move(-1)
+    elif (app.link.isJumping):
+        app.link.jump()
 
 runApp(app.width, app.height)

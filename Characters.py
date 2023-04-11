@@ -2,6 +2,9 @@ from cmu_graphics import *
 from PIL import Image
 
 class Link:
+    velocity = 9
+    mass = 1
+
     def __init__(self):
         linkSpriteSheet = Image.open('Images/LinkSpriteSheet.png')
         linkSpriteSheet = linkSpriteSheet.resize((268, 228))
@@ -11,12 +14,29 @@ class Link:
         self.image = self.walk
         self.leftX = 0
         self.topY = 355
+        self.isJumping = False
 
     def move(self, dir):
         if (dir > 0):
             self.leftX += 3
         else:
             self.leftX -= 3
+    
+    def jump(self):
+        force = 0.5 * Link.mass * (Link.velocity**2)
+        self.topY -= force
+        Link.velocity = Link.velocity - 1
+
+        if Link.velocity < 0:
+            Link.mass = -1
+        
+        if (Link.velocity == -10):
+            self.isJumping = False
+            Link.velocity = 9
+            Link.mass = 1
+
+
+
     
         
 
