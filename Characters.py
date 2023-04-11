@@ -10,10 +10,12 @@ class Link:
         linkSpriteSheet = linkSpriteSheet.resize((268, 228))
         linkSpriteSheet = linkSpriteSheet.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         self.walk = linkSpriteSheet.crop((53, 0, 106, 50))
-        self.bow = linkSpriteSheet.crop((72, 121, 125, 171))
-        self.image = self.bow
+        self.bow = linkSpriteSheet.crop((80, 121, 133, 171))
+        self.image = self.walk
         self.leftX = 0
         self.topY = 358
+        self.linkWidth = 50
+        self.linkHeight = 45
         self.lookingRight = True
         self.isJumping = False
         self.moveSpeed = 10

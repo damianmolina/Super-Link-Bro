@@ -39,6 +39,8 @@ def onAppStart(app):
 
 def redrawAll(app):
     drawFirstLevel(app)
+    drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
+             app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
     drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
 
