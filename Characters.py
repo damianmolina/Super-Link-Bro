@@ -12,14 +12,21 @@ class Link:
         self.walk = linkSpriteSheet.crop((53, 0, 106, 50))
         self.bow = linkSpriteSheet.crop((65, 121, 130, 165))
         self.image = self.walk
+        self.lookingRight = True
         self.leftX = 0
         self.topY = 355
         self.isJumping = False
 
     def move(self, dir):
         if (dir > 0):
+            if (not self.lookingRight):
+                self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+                self.lookingRight = True
             self.leftX += 3
         else:
+            if (self.lookingRight):
+                self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+                self.lookingRight = False
             self.leftX -= 3
     
     def jump(self):
