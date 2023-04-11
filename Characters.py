@@ -11,7 +11,7 @@ class Link:
         linkSpriteSheet = linkSpriteSheet.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         self.walk = linkSpriteSheet.crop((53, 0, 106, 50))
         self.bow = linkSpriteSheet.crop((65, 121, 130, 165))
-        self.image = self.walk
+        self.image = self.bow
         self.leftX = 0
         self.topY = 355
         self.lookingRight = True

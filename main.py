@@ -1,13 +1,13 @@
 from cmu_graphics import *
 from PIL import Image
-from Characters import Link
+from Characters import *
+from FirstLevel import *
 
 def onAppStart(app):
     app.width = 896
     app.height = 448
-    app.image = Image.open('Images/Mario 1-1.png')
-    app.image = app.image.resize((app.image.width * 2, app.image.height * 2))
-    app.image = CMUImage(app.image)
+    app.firstLevel = Image.open('Images/Mario 1-1.png')
+    app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
     app.link = Link()
     app.labelX = 0
     app.labelY = 0
@@ -16,9 +16,10 @@ def onAppStart(app):
 
 
 def redrawAll(app):
-    drawImage(app.image, 0, 0)
+    drawFirstLevel(app)
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
-    drawLabel( f'({app.labelX}, {app.labelY})', app.labelX, app.labelY)
+    drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY)
+
 
 def onMouseMove(app, mouseX, mouseY):
     app.labelX = mouseX
