@@ -15,6 +15,7 @@ def drawCell(app, row, col):
         color = 'red'
     cellLeft, cellTop = getCellLeftTop(app, row, col)
     cellWidth, cellHeight = getCellSize(app)
+    app.collisionBlocks.append((cellLeft, cellTop, cellWidth, cellHeight))
     drawRect(cellLeft, cellTop, cellWidth, cellHeight, fill = color,
              border='black', borderWidth = app.cellBorderWidth)
 
