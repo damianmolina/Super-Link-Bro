@@ -5,18 +5,13 @@ from Characters import *
 def drawFirstLevel(app):
     # First draw the background
     drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
-    for col in range(app.cols):
-        drawCell(app, app.rows, col)
+    
 
 def drawCell(app, row, col):
-    if (col % 2 == 0):
-        color = 'black'
-    else:
-        color = 'red'
     cellLeft, cellTop = getCellLeftTop(app, row, col)
     cellWidth, cellHeight = getCellSize(app)
     app.collisionBlocks.append((cellLeft, cellTop, cellWidth, cellHeight))
-    drawRect(cellLeft, cellTop, cellWidth, cellHeight, fill = color,
+    drawRect(cellLeft, cellTop, cellWidth, cellHeight, fill = 'black',
              border='black', borderWidth = app.cellBorderWidth)
 
 def getCellLeftTop(app, row, col):

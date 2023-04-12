@@ -12,6 +12,7 @@ def onAppStart(app):
     # Get the first level image
     app.firstLevel = Image.open('Images/Mario 1-1.png')
     app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
+    print(app.firstLevel.size)
     
     # Create Link object
     app.link = Link()
@@ -66,9 +67,9 @@ def onKeyRelease(app, key):
 
 def onStep(app):
     if (app.moveRight):
-        app.link.move(app, 1)
+        app.link.move(app, app.link.moveSpeed, 0)
     elif (app.moveLeft):
-        app.link.move(app, -1)
+        app.link.move(app, -(app.link.moveSpeed), 0)
     if (app.link.isJumping):
         app.link.jump()
 

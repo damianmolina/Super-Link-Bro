@@ -18,28 +18,32 @@ class Link:
         self.linkHeight = 45
         self.lookingRight = True
         self.isJumping = False
-        self.moveSpeed = 10
+        self.moveSpeed = 75
 
-    def move(self, app, dir):
-        if (dir > 0):
-            if (not self.lookingRight):
-                self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-                self.lookingRight = True
-            
-            if (self.leftX + 14.5 >= app.width//2):
-                app.levelLeft -= self.moveSpeed
+    def move(self, app, dx, dy):
+        self.flip(dx)
+        if (dx > 0 and self.leftX + self.linkWidth < app.levelLeft + app.levelWidth):
+            if (self.leftX + self.linkWidth >= app.width//2 and app.levelLeft > -(app.levelWidth)):
+                app.levelLeft -= dx
             else:
-                self.leftX += self.moveSpeed
+                self.leftX += dx
 
-        elif (dir < 0 and not self.leftX < app.levelLeft):
-            if (self.lookingRight):
-                self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-                self.lookingRight = False
-            
-            if (self.leftX - 14.5 <= app.width//2 and app.levelLeft < 0):
-                app.levelLeft += self.moveSpeed
+        elif (dx < 0 and self.leftX > app.levelLeft):
+            if (self.leftX - self.linkWidth <= app.width//2 and app.levelLeft < 0):
+                app.levelLeft -= dx
             else:
-                self.leftX -= self.moveSpeed
+                self.leftX += dx
+    
+        self.topY += dy
+    
+    def flip(self, dx):
+        if (dx > 0 and not self.lookingRight):
+            self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+            self.lookingRight = True
+        elif (dx < 0 and self.lookingRight):
+            self.image = self.image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+            self.lookingRight = False
+
     
     def jump(self):
         force = 0.5 * Link.mass * (Link.velocity**2)
