@@ -42,11 +42,11 @@ def onAppStart(app):
 
 
 def redrawAll(app):
-    # Draw all of the collision blocks
-    drawBlocks(app)
-
     # Draws the background
     #drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
+
+    # Draw all of the collision blocks
+    drawBlocks(app)
 
     # Draws Link's boundary box
     drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
@@ -92,9 +92,10 @@ def onStep(app):
         app.link.move(app, app.link.moveSpeed, 0)
     elif (app.moveLeft):
         app.link.move(app, -(app.link.moveSpeed), 0)
+
     if (app.link.isJumping):
         app.link.jump()
-
+    #print(app.link.centerY)
     
 # Runs game
 runApp(app.width, app.height)
