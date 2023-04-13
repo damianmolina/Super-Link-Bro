@@ -34,24 +34,42 @@ def onAppStart(app):
     app.levelHeight = 400
     app.cellBorderWidth = 1
 
+    # Lowest possible floor
     app.lowestFloor = app.levelHeight
 
     # Collision blocks
-    app.collisionBlocks = []
+    app.collisionBlocks = getFirstLevel(app)
 
 
 def redrawAll(app):
-    drawFirstLevel(app)
+    # Draw all of the collision blocks
+    drawBlocks(app)
+
+    # Draws the background
+    #drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
+
+    # Draws Link's boundary box
     drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
              app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
+    
+    # Draws Link
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
+
+    # Draws pointer for (x,y) of mouse
     drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
 
 
+# To help with knowing where the mouse is
 def onMouseMove(app, mouseX, mouseY):
     app.labelX = mouseX
     app.labelY = mouseY
 
+# Draws collision blocks from list of app.collisionBlocks
+def drawBlocks(app):
+    for left, top, width, height in app.collisionBlocks:
+        drawRect(left, top, width, height)
+
+# Controls movements of Link
 def onKeyPress(app, key):
     if (key == 'right'):
         app.moveRight = True
@@ -61,13 +79,14 @@ def onKeyPress(app, key):
         app.link.isOnGround = False
         app.link.isJumping = True
 
+# Makes sure to stop moving Link
 def onKeyRelease(app, key):
     if (key == 'right'):
         app.moveRight = False
     elif (key == 'left'):
         app.moveLeft = False
 
-
+# Moves Link when keys are pressed
 def onStep(app):
     if (app.moveRight):
         app.link.move(app, app.link.moveSpeed, 0)
@@ -77,5 +96,5 @@ def onStep(app):
         app.link.jump()
 
     
-
+# Runs game
 runApp(app.width, app.height)

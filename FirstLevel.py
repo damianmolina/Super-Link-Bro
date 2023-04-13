@@ -2,21 +2,29 @@ from cmu_graphics import *
 from PIL import Image
 from Characters import *
 
-def drawFirstLevel(app):
-    drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
-    drawCell(app, 8, 20)
+# Draws all of the blocks from level 1
+def getFirstLevel(app):
+    return getCell(app, 11, 15)
 
-def drawCell(app, row, col):
+# These methods are from CSAcademy exercises relating to drawing grids, however,
+# the code is modified to help fit my game
+def getCell(app, row, col):
     cellLeft, cellTop = getCellLeftTop(app, row, col)
     cellWidth = cellHeight = 32
-    app.collisionBlocks.append((cellLeft, cellTop, cellWidth, cellHeight))
-    drawRect(cellLeft, cellTop, cellWidth, cellHeight, fill = 'black',
-             border='black', borderWidth = app.cellBorderWidth)
+    cell = (cellLeft, cellTop, cellWidth, cellHeight)
+    return [cell]
 
 def getCellLeftTop(app, row, col):
     cellWidth = cellHeight = 32
     cellLeft = app.levelLeft + col * cellWidth
     cellTop = app.levelTop + row * cellHeight
     return (cellLeft, cellTop)
+
+# Moves all of the blocks from level 1
+def moveBlocks(app, dx, dy):
+    for i in range(len(app.collisionBlocks)):
+        left, top, width, height = app.collisionBlocks[i]
+        newLeft, newTop = left + dx, top + dy
+        app.collisionBlocks[i] = (newLeft, newTop, width, height)
 
 
