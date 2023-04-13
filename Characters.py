@@ -3,7 +3,7 @@ from PIL import Image
 
 class Link:
     velocity = 9
-    mass = 1
+    gravity = -2
 
     def __init__(self):
         linkSpriteSheet = Image.open('Images/LinkSpriteSheet.png')
@@ -18,11 +18,13 @@ class Link:
         self.linkHeight = 45
         self.lookingRight = True
         self.isJumping = False
+        self.isOnGround = False
         self.moveSpeed = 75
 
     def move(self, app, dx, dy):
         self.flip(dx)
-        if (dx > 0 and self.leftX + self.linkWidth < app.levelLeft + app.levelWidth):
+
+        if (dx > 0):
             if (self.leftX + self.linkWidth >= app.width//2 and app.levelLeft > -(app.levelWidth)):
                 app.levelLeft -= dx
             else:
@@ -57,12 +59,3 @@ class Link:
             self.isJumping = False
             Link.velocity = 9
             Link.mass = 1
-
-
-
-    
-        
-
-
-
-        

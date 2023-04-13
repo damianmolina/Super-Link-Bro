@@ -29,10 +29,12 @@ def onAppStart(app):
     app.rows = 13
     app.cols = 212
     app.levelLeft = 0
-    app.levelTop = 0
+    app.levelTop = 16
     app.levelWidth = 6768
     app.levelHeight = 400
     app.cellBorderWidth = 1
+
+    app.lowestFloor = app.levelHeight
 
     # Collision blocks
     app.collisionBlocks = []
@@ -55,7 +57,8 @@ def onKeyPress(app, key):
         app.moveRight = True
     elif (key == 'left'):
         app.moveLeft = True
-    elif (key == 'up' and app.link.isJumping == False):
+    elif (key == 'up' and app.link.isOnGround == True):
+        app.link.isOnGround = False
         app.link.isJumping = True
 
 def onKeyRelease(app, key):
