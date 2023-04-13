@@ -6,7 +6,7 @@ class Link:
     velocity = 20
     gravity = -2
 
-    def __init__(self):
+    def __init__(self, app):
         # Gets the walk and bow sprite from Link sprite sheet
         linkSpriteSheet = Image.open('Images/LinkSpriteSheet.png')
         linkSpriteSheet = linkSpriteSheet.resize((268, 228))
@@ -18,7 +18,7 @@ class Link:
         self.image = self.walk
 
         # The dimensions of Link's boundary box
-        self.leftX = 0
+        self.leftX = app.width/2
         self.topY = 358
         self.linkWidth = 50
         self.linkHeight = 45
@@ -43,28 +43,14 @@ class Link:
 
         # Check if moving right and not colliding
         if (dx > 0 and not self.isCollisionX(app, dx)):
-            # Checks if Link is past the middle of the screen (towards right)
-            if (self.leftX + self.linkWidth >= app.width/2):
-                # Moves background image and blocks
-                moveBlocks(app, -dx, dy)
-                app.levelLeft -= dx
-            else:
-                # Moves Link sprite
-                self.leftX += dx
-                self.centerX += dx
+            moveBlocks(app, -dx, dy)
+            app.levelLeft -= dx
         
         # Checks if moving left and not out of bounds and is not colliding
-        elif (dx < 0 and self.leftX > app.levelLeft and not self.isCollisionX(app, dx)):
-             # Checks if Link is past the middle of the screen (towards left) and 
-             # if Link is at the beginning of the level
-            if (self.leftX - self.linkWidth <= app.width/2 and app.levelLeft < 0):
-                # Moves background image and blocks
-                moveBlocks(app, -dx, dy)
-                app.levelLeft -= dx
-            else:
-                # Moves Link sprite
-                self.leftX += dx
-                self.centerX += dx
+        elif (dx < 0 and not self.isCollisionX(app, dx)):
+            print('flag')
+            moveBlocks(app, -dx, dy)
+            app.levelLeft -= dx
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
@@ -80,14 +66,12 @@ class Link:
             # Cheks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + dx > left and top < self.centerY < top + height):
-                if (not self.leftX + self.linkWidth >= app.width/2):
-                    self.leftX = left - self.linkWidth
-                    self.centerX = left - (self.linkWidth)/2
+                moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
+                app.levelLeft -= left - (self.leftX + self.linkWidth)
                 return True
-            elif (dx < 0 and self.leftX > left and self.leftX - dx < left + width and top < self.centerY < top + height):
-                if (self.leftX + self.linkWidth >= app.width/2):
-                    self.leftX = left + width 
-                    self.centerX = left + width + (self.linkWidth)/2
+            elif (dx < 0 and self.leftX - dx < left + width and top < self.centerY < top + height):
+                moveBlocks(app, self.leftX - (left + width), 0)
+                app.levelLeft += self.leftX - (left + width)
                 return True
         return False
 

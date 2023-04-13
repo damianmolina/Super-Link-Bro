@@ -15,7 +15,7 @@ def onAppStart(app):
     print(app.firstLevel.size)
     
     # Create Link object
-    app.link = Link()
+    app.link = Link(app)
 
     # Attributes to track where the mouse is
     app.labelX = 0
@@ -43,7 +43,7 @@ def onAppStart(app):
 
 def redrawAll(app):
     # Draws the background
-    #drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
+    #rawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
 
     # Draw all of the collision blocks
     drawBlocks(app)

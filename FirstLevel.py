@@ -4,7 +4,7 @@ from Characters import *
 
 # Draws all of the blocks from level 1
 def getFirstLevel(app):
-    return getCell(app, 11, 16)
+    return getCell(app, 9, 16)
 
 # These methods are from CSAcademy exercises relating to drawing grids, however,
 # the code is modified to help fit my game
