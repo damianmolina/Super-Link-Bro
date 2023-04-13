@@ -48,7 +48,6 @@ class Link:
         
         # Checks if moving left and not out of bounds and is not colliding
         elif (dx < 0 and not self.isCollisionX(app, dx)):
-            print('flag')
             moveBlocks(app, -dx, dy)
             app.levelLeft -= dx
         
@@ -67,9 +66,9 @@ class Link:
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + dx > left and top < self.centerY < top + height):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
-                app.levelLeft -= left - (self.leftX + self.linkWidth)
+                app.levelLeft -= (left - (self.leftX + self.linkWidth))
                 return True
-            elif (dx < 0 and self.leftX - dx < left + width and top < self.centerY < top + height):
+            elif (dx < 0 and self.leftX > left and self.leftX - dx < left + width and top < self.centerY < top + height):
                 moveBlocks(app, self.leftX - (left + width), 0)
                 app.levelLeft += self.leftX - (left + width)
                 return True
@@ -87,9 +86,9 @@ class Link:
                     self.centerY = top - (self.linkHeight)/2
                 self.isOnGround = True
                 return True
-            elif (dy < 0 and self.topY - 1 < top + height and left < self.centerX < left + width and not self.isJumping):
+            elif (dy < 0 and self.topY - 1 < top + height and left < self.centerX < left + width and self.isJumping):
                 self.topY = top + height
-                self.centerY = top + (self.linkHeight)/2
+                self.centerY = top + height + (self.linkHeight)/2
                 return True
         return False
 
@@ -110,4 +109,3 @@ class Link:
             Link.velocity = 20
         else:
             Link.velocity -= 2
-
