@@ -2,6 +2,7 @@ from cmu_graphics import *
 from PIL import Image
 from Characters import *
 from FirstLevel import *
+from Weapons import *
 
 def onAppStart(app):
     # Screen width and height
@@ -16,6 +17,8 @@ def onAppStart(app):
     
     # Create Link object
     app.link = Link(app)
+    
+    app.arrow = Arrow(app)
 
     # Attributes to track where the mouse is
     app.labelX = 0
@@ -47,6 +50,8 @@ def redrawAll(app):
 
     # Draw all of the collision blocks
     drawBlocks(app)
+
+    drawImage(CMUImage(app.arrow.image), 50, 100)
 
     # Draws Link's boundary box
     drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
