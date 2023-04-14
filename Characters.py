@@ -3,8 +3,8 @@ from PIL import Image
 from FirstLevel import *
 
 class Link:
-    velocity = 20
-    gravity = -2
+    velocity = -20
+    gravity = 2
 
     def __init__(self, app):
         # Gets the walk and bow sprite from Link sprite sheet
@@ -34,12 +34,16 @@ class Link:
         # Whether Link is on the ground or not
         self.isOnGround = True
 
+        self.isFalling = False
+
         # Link's movement speed
         self.moveSpeed = 10
 
     def move(self, app, dx, dy):
         # Flip Link's image if he's looking the wrong way
         self.flip(dx)
+
+        self.checkGround()
 
         # Check if moving right and not colliding
         if (dx > 0 and not self.isCollisionX(app, dx)):
@@ -86,9 +90,10 @@ class Link:
                     self.centerY = top - (self.linkHeight)/2
                 self.isOnGround = True
                 return True
-            elif (dy < 0 and self.topY - 1 < top + height and left < self.centerX < left + width and self.isJumping):
+            elif (dy < 0 and self.topY - 1 < top + height and left < self.centerX < left + width and not self.isJumping):
                 self.topY = top + height
                 self.centerY = top + height + (self.linkHeight)/2
+                #self.isFalling = True
                 return True
         return False
 
@@ -103,9 +108,27 @@ class Link:
 
     # Causes Link to jump
     def jump(self):
-        self.move(app, 0, -(Link.velocity + Link.gravity))
-        if (self.isOnGround):
+        self.isFalling = False
+        self.move(app, 0, Link.velocity + Link.gravity)
+        if (Link.velocity == 0):
+            self.isFalling = True
             self.isJumping = False
-            Link.velocity = 20
         else:
-            Link.velocity -= 2
+            Link.velocity += 2
+
+    def checkGround(self):
+        if (self.topY + self.linkHeight + 1 > app.lowestFloor): 
+            self.isOnGround = True
+        else:
+            for left, top, width, height in app.collisionBlocks:
+                if (self.topY + self.linkHeight + 1 > top and left < self.centerX < left + width):
+                    self.isOnGround = True
+            self.isOnGround = False
+    
+    def fall(self):
+        self.move(app, 0, Link.gravity)
+        if (self.isOnGround):
+            Link.gravity = 2
+            Link.velocity = -20
+        else:
+            Link.gravity += 2
