@@ -11,7 +11,6 @@ def getFirstLevel(app):
         for col in range(cols):
             if blocks[row][col] == 1:
                 result.append(getCell(app, row, col))
-    print(result)
     return result
 
 # These methods are from CSAcademy exercises relating to drawing grids, however,

@@ -43,6 +43,9 @@ def onAppStart(app):
     # Collision blocks
     app.collisionBlocks = getFirstLevel(app)
 
+    # Arrows
+    app.arrows = list()
+
 
 def redrawAll(app):
     # Draws the background
@@ -51,7 +54,7 @@ def redrawAll(app):
     # Draw all of the collision blocks
     drawBlocks(app)
 
-    drawImage(CMUImage(app.arrow.image), 50, 100)
+    drawArrows(app)
 
     # Draws Link's boundary box
     drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
@@ -83,6 +86,8 @@ def onKeyPress(app, key):
     elif (key == 'up' and app.link.isOnGround == True):
         app.link.isOnGround = False
         app.link.isJumping = True
+    elif (key == 'p'):
+        app.arrows.append(Arrow(app))
 
 # Makes sure to stop moving Link
 def onKeyRelease(app, key):
@@ -102,8 +107,19 @@ def onStep(app):
         app.link.jump()
     if (app.link.isFalling):
         app.link.fall()
+    
+    for arrow in app.arrows:
+        if (arrow.arrowCenterX < 0 or arrow.arrowCenterX > app.width):
+            app.arrows.remove(arrow)
+        else:
+            arrow.shoot()
+    print(app.arrows)
 
-    #print(app.link.isOnGround)
+def drawArrows(app):
+    for arrow in app.arrows:
+        drawImage(CMUImage(app.arrow.image), arrow.arrowLeftX, arrow.arrowTopY)
+        
+
     
 # Runs game
 runApp(app.width, app.height)
