@@ -80,7 +80,7 @@ class Link:
 
     def isCollisionY(self, app, dy):
         for left, top, width, height in app.collisionBlocks:
-            if (dy > 0 and self.topY + self.linkHeight + 1 > top and left < self.centerX < left + width
+            if (dy > 0 and self.topY < top and self.topY + self.linkHeight + dy > top and left < self.centerX < left + width
                 or self.topY + self.linkHeight + dy > app.lowestFloor):
                 if (self.topY + self.linkHeight + dy > app.lowestFloor):
                     self.topY = app.lowestFloor - self.linkHeight
@@ -90,10 +90,12 @@ class Link:
                     self.centerY = top - (self.linkHeight)/2
                 self.isOnGround = True
                 return True
-            elif (dy < 0 and self.topY - 1 < top + height and left < self.centerX < left + width and not self.isJumping):
+            elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height and left < self.centerX < left + width and self.isJumping):
+                print('flag')
                 self.topY = top + height
                 self.centerY = top + height + (self.linkHeight)/2
-                #self.isFalling = True
+                self.isJumping = False
+                self.isFalling = True
                 return True
         return False
 

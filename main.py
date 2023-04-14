@@ -95,10 +95,10 @@ def onStep(app):
 
     if (app.link.isJumping):
         app.link.jump()
-    elif (app.link.isFalling):
+    if (app.link.isFalling):
         app.link.fall()
 
-    print(app.link.isOnGround)
+    #print(app.link.isOnGround)
     
 # Runs game
 runApp(app.width, app.height)
