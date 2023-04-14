@@ -43,7 +43,7 @@ def onAppStart(app):
 
 def redrawAll(app):
     # Draws the background
-    #rawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
+    #drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
 
     # Draw all of the collision blocks
     drawBlocks(app)

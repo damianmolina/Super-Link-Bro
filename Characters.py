@@ -91,7 +91,6 @@ class Link:
                 self.isOnGround = True
                 return True
             elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height and left < self.centerX < left + width and self.isJumping):
-                print('flag')
                 self.topY = top + height
                 self.centerY = top + height + (self.linkHeight)/2
                 self.isJumping = False
