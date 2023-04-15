@@ -39,13 +39,15 @@ def onAppStart(app):
     # Collision blocks
     app.collisionBlocks = getFirstLevel(app)
 
+    # Create Link object
+    app.link = Link(app)
+
     # Arrows
     app.arrows = list()
 
-    # Create Link object
-    app.link = Link(app)
+    # Bombs
+    app.bombs = list()
     
-    app.arrow = Arrow(app)
 
 
 
@@ -57,6 +59,8 @@ def redrawAll(app):
     drawBlocks(app)
 
     drawArrows(app)
+
+    drawBombs(app)
 
     # Draws Link's boundary box
     drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
@@ -90,6 +94,8 @@ def onKeyPress(app, key):
         app.link.isJumping = True
     elif (key == 'p'):
         app.arrows.append(Arrow(app))
+    elif (key == 'o'):
+        app.bombs.append(Bomb(app))
 
 # Makes sure to stop moving Link
 def onKeyRelease(app, key):
@@ -115,12 +121,20 @@ def onStep(app):
             app.arrows.remove(arrow)
         else:
             arrow.shoot()
-    print(app.arrows)
+    
+    for bomb in app.bombs:
+        if (bomb.hasCollided):
+            app.bombs.remove(bomb)
+        else:
+            bomb.move(app)
 
 def drawArrows(app):
     for arrow in app.arrows:
         drawImage(CMUImage(arrow.image), arrow.arrowLeftX, arrow.arrowTopY)
-        
+
+def drawBombs(app):
+    for bomb in app.bombs:
+        drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)        
 
     
 # Runs game
