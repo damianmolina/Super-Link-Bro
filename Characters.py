@@ -66,7 +66,7 @@ class Link:
     def isCollisionX(self, app, dx):
         # Goes through each block
         for left, top, width, height in app.collisionBlocks:
-            # Cheks direction of movement, whether it will collide and whether Link's center
+            # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + dx > left and top < self.centerY < top + height):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)

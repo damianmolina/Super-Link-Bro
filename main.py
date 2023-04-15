@@ -85,11 +85,11 @@ def drawBlocks(app):
 
 # Controls movements of Link
 def onKeyPress(app, key):
-    if (key == 'right'):
+    if (key == 'd'):
         app.moveRight = True
-    elif (key == 'left'):
+    elif (key == 'a'):
         app.moveLeft = True
-    elif (key == 'up' and app.link.isOnGround == True):
+    elif (key == 'w' and app.link.isOnGround == True):
         app.link.isOnGround = False
         app.link.isJumping = True
     elif (key == 'p'):
@@ -99,9 +99,9 @@ def onKeyPress(app, key):
 
 # Makes sure to stop moving Link
 def onKeyRelease(app, key):
-    if (key == 'right'):
+    if (key == 'd'):
         app.moveRight = False
-    elif (key == 'left'):
+    elif (key == 'a'):
         app.moveLeft = False
 
 # Moves Link when keys are pressed
@@ -122,18 +122,19 @@ def onStep(app):
         else:
             arrow.shoot()
     
-    for bomb in app.bombs:
-        if (bomb.hasCollided):
-            app.bombs.remove(bomb)
+    if (len(app.bombs) > 0):
+        if (app.bombs[0].hasCollided):
+            app.bombs.pop()
         else:
-            bomb.move(app)
+            app.bombs[0].move(app)
 
 def drawArrows(app):
     for arrow in app.arrows:
         drawImage(CMUImage(arrow.image), arrow.arrowLeftX, arrow.arrowTopY)
 
 def drawBombs(app):
-    for bomb in app.bombs:
+    if (len(app.bombs) > 0):
+        bomb = app.bombs[0]
         drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)        
 
     
