@@ -15,7 +15,6 @@ def onAppStart(app):
     app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
     print(app.firstLevel.size)
 
-
     # Attributes to track where the mouse is
     app.labelX = 0
     app.labelY = 0
@@ -47,9 +46,10 @@ def onAppStart(app):
 
     # Bombs
     app.bombs = list()
+
+    # Tektite
+    app.tektite = Tektite(app)
     
-
-
 
 def redrawAll(app):
     # Draws the background
@@ -61,6 +61,8 @@ def redrawAll(app):
     drawArrows(app)
 
     drawBombs(app)
+
+    drawImage(CMUImage(app.tektite.image), 0, 0)    
 
     # Draws Link's boundary box
     drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
@@ -136,6 +138,8 @@ def drawBombs(app):
     if (len(app.bombs) > 0):
         bomb = app.bombs[0]
         drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)        
+    
+
 
     
 # Runs game

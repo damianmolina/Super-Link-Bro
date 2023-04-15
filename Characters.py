@@ -18,7 +18,7 @@ class Link:
         self.image = self.walk
 
         # The dimensions of Link's boundary box
-        self.leftX = app.width/2
+        self.leftX = app.width/2 - 25
         self.topY = 358
         self.linkWidth = 50
         self.linkHeight = 45
@@ -68,11 +68,13 @@ class Link:
         for left, top, width, height in app.collisionBlocks:
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
-            if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + dx > left and top < self.centerY < top + height):
+            if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + dx > left 
+                and top < self.centerY < top + height):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
                 app.levelLeft -= (left - (self.leftX + self.linkWidth))
                 return True
-            elif (dx < 0 and self.leftX > left and self.leftX - dx < left + width and top < self.centerY < top + height):
+            elif (dx < 0 and self.leftX > left and self.leftX - dx < left + width 
+                  and top < self.centerY < top + height):
                 moveBlocks(app, self.leftX - (left + width), 0)
                 app.levelLeft += self.leftX - (left + width)
                 return True
@@ -80,7 +82,8 @@ class Link:
 
     def isCollisionY(self, app, dy):
         for left, top, width, height in app.collisionBlocks:
-            if (dy > 0 and self.topY < top and self.topY + self.linkHeight + dy > top and left < self.centerX < left + width
+            if (dy > 0 and self.topY < top and self.topY + self.linkHeight + dy > top 
+                and left < self.centerX < left + width
                 or self.topY + self.linkHeight + dy > app.lowestFloor):
                 if (self.topY + self.linkHeight + dy > app.lowestFloor):
                     self.topY = app.lowestFloor - self.linkHeight
@@ -90,7 +93,8 @@ class Link:
                     self.centerY = top - (self.linkHeight)/2
                 self.isOnGround = True
                 return True
-            elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height and left < self.centerX < left + width and self.isJumping):
+            elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height 
+                  and left < self.centerX < left + width and self.isJumping):
                 self.topY = top + height
                 self.centerY = top + height + (self.linkHeight)/2
                 self.isJumping = False
@@ -133,3 +137,9 @@ class Link:
             Link.velocity = -20
         else:
             Link.gravity += 2
+
+class Tektite:
+    def __init__(self, app):
+        tektite = Image.open('Images/Tektite.png')
+        tektite = tektite.resize((150, 150))
+        self.image = tektite
