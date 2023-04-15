@@ -13,27 +13,22 @@ class Arrow:
             self.lookingRight = True
         else:
             self.lookingRight = False
-            arrow = arrow.transpose(Image.FLIP_LEFT_RIGHT)
+            arrow = arrow.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         
         self.image = arrow
 
-        self.arrowLeftX = app.link.leftX
+        self.arrowLeftX = app.width/2
         self.arrowTopY = app.link.topY
-        self.arrowCenterX = app.link.centerX
-        self.arrowCenterY = app.link.centerY
     
     def shoot(self):
         if (self.lookingRight):
-            self.arrowCenterX += 10
             self.arrowLeftX += 10
         else:
-            self.arrowCenterX -= 10
             self.arrowLeftX -= 10
         
     def __eq__(self, other):
         if (not isinstance(other, Arrow)): return False
-
-        if (self.arrowCenterX == other.arrowCenterX and self.arrowCenterY == other.arrowCenterY):
+        if (self.arrowLeftX == other.arrowLeftX and self.arrowTopY == other.arrowTopY):
             return True
         else:
             return False

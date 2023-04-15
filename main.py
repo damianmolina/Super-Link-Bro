@@ -14,11 +14,7 @@ def onAppStart(app):
     app.firstLevel = Image.open('Images/Mario 1-1.png')
     app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
     print(app.firstLevel.size)
-    
-    # Create Link object
-    app.link = Link(app)
-    
-    app.arrow = Arrow(app)
+
 
     # Attributes to track where the mouse is
     app.labelX = 0
@@ -45,6 +41,12 @@ def onAppStart(app):
 
     # Arrows
     app.arrows = list()
+
+    # Create Link object
+    app.link = Link(app)
+    
+    app.arrow = Arrow(app)
+
 
 
 def redrawAll(app):
@@ -109,7 +111,7 @@ def onStep(app):
         app.link.fall()
     
     for arrow in app.arrows:
-        if (arrow.arrowCenterX < 0 or arrow.arrowCenterX > app.width):
+        if (arrow.arrowLeftX < 0 or arrow.arrowLeftX > app.width):
             app.arrows.remove(arrow)
         else:
             arrow.shoot()
@@ -117,7 +119,7 @@ def onStep(app):
 
 def drawArrows(app):
     for arrow in app.arrows:
-        drawImage(CMUImage(app.arrow.image), arrow.arrowLeftX, arrow.arrowTopY)
+        drawImage(CMUImage(arrow.image), arrow.arrowLeftX, arrow.arrowTopY)
         
 
     
