@@ -49,11 +49,14 @@ def onAppStart(app):
 
     # Tektite
     app.tektite = Tektite(app)
+
+    # Stalfo
+    app.stalfo = Stalfo(app)
     
 
 def redrawAll(app):
     # Draws the background
-    #drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
+    drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
 
     # Draw all of the collision blocks
     drawBlocks(app)
@@ -62,7 +65,7 @@ def redrawAll(app):
 
     drawBombs(app)
 
-    drawImage(CMUImage(app.tektite.image), 0, 0)    
+    drawImage(CMUImage(app.stalfo.image), 100, 100)    
 
     # Draws Link's boundary box
     drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
@@ -138,8 +141,6 @@ def drawBombs(app):
     if (len(app.bombs) > 0):
         bomb = app.bombs[0]
         drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)        
-    
-
 
     
 # Runs game

@@ -140,6 +140,14 @@ class Link:
 
 class Tektite:
     def __init__(self, app):
+        # From https://www.pixilart.com/art/tektite-sprite-3dae6d7691bf058
         tektite = Image.open('Images/Tektite.png')
         tektite = tektite.resize((150, 150))
         self.image = tektite
+
+class Stalfo:
+    def __init__(self, app):
+        # From https://www.deviantart.com/captainedwardteague/art/Original-The-Zelda-Stalfos-Sprite-858214933
+        stalfo = Image.open('Images/Stalfo.png')
+        stalfo = stalfo.resize((50, 50))
+        self.image = stalfo
