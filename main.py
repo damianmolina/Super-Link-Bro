@@ -3,6 +3,7 @@ from PIL import Image
 from Characters import *
 from FirstLevel import *
 from Weapons import *
+from RandomWorld import *
 
 def onAppStart(app):
     # Screen width and height
@@ -13,7 +14,6 @@ def onAppStart(app):
     # Get the first level image
     app.firstLevel = Image.open('Images/Mario 1-1.png')
     app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
-    print(app.firstLevel.size)
 
     # Attributes to track where the mouse is
     app.labelX = 0
@@ -61,21 +61,22 @@ def redrawAll(app):
     # Draw all of the collision blocks
     drawBlocks(app)
 
-    drawArrows(app)
+    #drawArrows(app)
 
-    drawBombs(app)
+    #drawBombs(app)
 
-    drawImage(CMUImage(app.stalfo.image), 100, 100)    
+    #drawImage(CMUImage(app.stalfo.image), 100, 100)    
 
     # Draws Link's boundary box
-    drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
-             app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
+    #drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
+             #app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
     
     # Draws Link
-    drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
+    #drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
 
     # Draws pointer for (x,y) of mouse
-    drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
+    #drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
+
 
 
 # To help with knowing where the mouse is

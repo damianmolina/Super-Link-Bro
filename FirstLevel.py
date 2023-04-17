@@ -36,9 +36,9 @@ def moveBlocks(app, dx, dy):
 
 def getRowsAndCols():
     result = []
-    for row in range(app.levelHeight):
+    for row in range(app.rows):
         currRow = []
-        for col in range(app.levelWidth):
+        for col in range(app.cols):
             if (row in {0, 1, 2, 3, 4}):
                 currRow.append(0)
             elif (row == 9 and col == 16):
@@ -46,6 +46,7 @@ def getRowsAndCols():
             else:
                 currRow.append(0)
         result.append(currRow)
+    print(result)
     return result
 
 
