@@ -33,6 +33,8 @@ def randomLevel():
     result = createEmpty2DList()
     rows, cols = len(result), len(result[0])
     for col in range(cols):
+        if (col in {num for num in range(15)}): continue
+
         prevCol = getColAsList(result, col)
         
         if (col == 0):
@@ -50,7 +52,7 @@ def randomLevel():
 def createEmpty2DList():
     result = []
     rows = 12
-    cols = 28
+    cols = 50
     for row in range(rows):
         result.append([0] * cols)
     return result

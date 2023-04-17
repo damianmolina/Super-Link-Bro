@@ -39,13 +39,21 @@ def getRowsAndCols():
     for row in range(app.rows):
         currRow = []
         for col in range(app.cols):
-            if (row in {0, 1, 2, 3, 4}):
+            if (row in {0, 1, 2, 3}):
                 currRow.append(0)
             elif (row == 8 and col == 16):
                 currRow.append(1)
             elif (row == 8 and col == 20):
                 currRow.append(1)
             elif (row == 8 and col == 21):
+                currRow.append(1)
+            elif (row == 8 and col == 22):
+                currRow.append(1)
+            elif (row == 8 and col == 23):
+                currRow.append(1)
+            elif (row == 8 and col == 24):
+                currRow.append(1)
+            elif (row == 4 and col == 22):
                 currRow.append(1)
             else:
                 currRow.append(0)

@@ -8,6 +8,7 @@ class Link:
 
     def __init__(self, app):
         # Gets the walk and bow sprite from Link sprite sheet
+        # From https://www.pngegg.com/en/png-zygrs
         linkSpriteSheet = Image.open('Images/LinkSpriteSheet.png')
         linkSpriteSheet = linkSpriteSheet.resize((268, 228))
         linkSpriteSheet = linkSpriteSheet.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
@@ -51,7 +52,7 @@ class Link:
             app.levelLeft -= dx
         
         # Checks if moving left and not out of bounds and is not colliding
-        elif (dx < 0 and not self.isCollisionX(app, dx)):
+        elif (dx < 0 and not self.isCollisionX(app, dx) and not app.levelLeft >= 0):
             moveBlocks(app, -dx, dy)
             app.levelLeft -= dx
         

@@ -12,6 +12,7 @@ def onAppStart(app):
     app.stepsPerSecond = 15
 
     # Get the first level image
+    # From https://ian-albert.com/games/super_mario_bros_maps/
     app.firstLevel = Image.open('Images/Mario 1-1.png')
     app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
 
@@ -55,6 +56,7 @@ def onAppStart(app):
     
 
 def redrawAll(app):
+    
     # Draws the background
     drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
 
@@ -132,6 +134,8 @@ def onStep(app):
             app.bombs.pop()
         else:
             app.bombs[0].move(app)
+    
+    
 
 def drawArrows(app):
     for arrow in app.arrows:
