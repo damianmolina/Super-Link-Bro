@@ -43,10 +43,13 @@ def getRowsAndCols():
                 currRow.append(0)
             elif (row == 9 and col == 16):
                 currRow.append(1)
+            elif (row == 8 and col == 20):
+                currRow.append(1)
+            elif (row == 8 and col == 21):
+                currRow.append(1)
             else:
                 currRow.append(0)
         result.append(currRow)
-    print(result)
     return result
 
 

@@ -61,21 +61,19 @@ def redrawAll(app):
     # Draw all of the collision blocks
     drawBlocks(app)
 
-    #drawArrows(app)
+    drawArrows(app)
 
-    #drawBombs(app)
-
-    #drawImage(CMUImage(app.stalfo.image), 100, 100)    
+    drawBombs(app)   
 
     # Draws Link's boundary box
-    #drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
-             #app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
+    drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
+             app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
     
     # Draws Link
-    #drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
+    drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
 
     # Draws pointer for (x,y) of mouse
-    #drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
+    drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
 
 
 
