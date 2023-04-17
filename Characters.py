@@ -3,7 +3,7 @@ from PIL import Image
 from FirstLevel import *
 
 class Link:
-    velocity = -20
+    velocity = -25
     gravity = 2
 
     def __init__(self, app):
@@ -115,7 +115,7 @@ class Link:
     def jump(self):
         self.isFalling = False
         self.move(app, 0, Link.velocity + Link.gravity)
-        if (Link.velocity == 0):
+        if (Link.velocity >= 0):
             self.isFalling = True
             self.isJumping = False
         else:
@@ -134,7 +134,7 @@ class Link:
         self.move(app, 0, Link.gravity)
         if (self.isOnGround):
             Link.gravity = 2
-            Link.velocity = -20
+            Link.velocity = -25
         else:
             Link.gravity += 2
 

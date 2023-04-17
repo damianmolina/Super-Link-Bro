@@ -117,6 +117,7 @@ def onStep(app):
 
     if (app.link.isJumping):
         app.link.jump()
+
     if (app.link.isFalling):
         app.link.fall()
     
