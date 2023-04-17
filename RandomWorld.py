@@ -1,9 +1,11 @@
 from cmu_graphics import *
 from PIL import Image
 from Characters import *
+import random
+
 # Draws all of the blocks from level 1
 def getRandomWorld(app):
-    blocks = getRowsAndCols()
+    blocks = randomLevel()
     result = []
     rows, cols = len(blocks), len(blocks[0])
     for row in range(rows):
@@ -15,7 +17,6 @@ def getRandomWorld(app):
 # These methods are from CSAcademy exercises relating to drawing grids, however,
 # the code is modified to help fit my game
 def getCell(app, row, col):
-    print('flag')
     cellLeft, cellTop = getCellLeftTop(app, row, col)
     cellWidth = cellHeight = 32
     cell = (cellLeft, cellTop, cellWidth, cellHeight)
@@ -28,20 +29,55 @@ def getCellLeftTop(app, row, col):
     return (cellLeft, cellTop)
 
 
-def getRowsAndCols():
-    result = []
-    for row in range(app.rows):
-        currRow = []
-        # 28 is the number of cols on the small screen
-        for col in range(28):
-            if (row in {0, 1, 2, 3, 4}):
-                currRow.append(0)
-            elif (row == 9 and col == 16):
-                currRow.append(1)
-            else:
-                currRow.append(0)
-        result.append(currRow)
+def randomLevel():
+    result = createEmpty2DList()
+    rows, cols = len(result), len(result[0])
+    for col in range(cols):
+        prevCol = getColAsList(result, col)
+        
+        if (col == 0):
+            prevCol = None
+        else:
+             prevCol = getColAsList(result, col - 1)
+        
+        numOfBlocks = getBlocks(prevCol)
+        
+        for i in range(numOfBlocks):
+            result[-i - 1][col] = 1
+        
     return result
 
+def createEmpty2DList():
+    result = []
+    rows = 12
+    cols = 28
+    for row in range(rows):
+        result.append([0] * cols)
+    return result
 
-
+def getColAsList(L, col):
+    result = []
+    rows = len(L)
+    
+    for row in range(rows):
+        result.append(L[row][col])
+    
+    return result
+    
+def getBlocks(prevCol):
+    if (prevCol == None):
+        prevColLength = 0
+    else:
+        prevColLength = prevCol.count(1)
+    
+    prob = random.random()
+    
+    if (prevColLength == 0):
+        return prevColLength + random.randint(1, 2)
+    elif (prevColLength >= 10):
+        return prevColLength - random.randint(1, 2)
+    else:
+        if (prob > 0.5):
+            return prevColLength + random.randint(1, 2)
+        else:
+            return abs(prevColLength - random.randint(1, 2))
