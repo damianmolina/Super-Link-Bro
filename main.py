@@ -78,7 +78,6 @@ def redrawAll(app):
     drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
 
 
-
 # To help with knowing where the mouse is
 def onMouseMove(app, mouseX, mouseY):
     app.labelX = mouseX
@@ -134,6 +133,7 @@ def onStep(app):
             app.bombs.pop()
         else:
             app.bombs[0].move(app)
+    
     
     
 

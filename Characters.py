@@ -40,10 +40,12 @@ class Link:
         # Link's movement speed
         self.moveSpeed = 10
 
+
     def move(self, app, dx, dy):
         # Flip Link's image if he's looking the wrong way
         self.flip(dx)
 
+        # Checks if Link is actually standing on top of something
         self.checkGround()
 
         # Check if moving right and not colliding
@@ -81,23 +83,31 @@ class Link:
                 return True
         return False
 
+    # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
         for left, top, width, height in app.collisionBlocks:
+            # Checks direction of movement, whether it will collide and whether Link's center
+            # is in the right spot for a collision to occur
             if (dy > 0 and self.topY < top and self.topY + self.linkHeight + dy > top 
                 and left < self.centerX < left + width
                 or self.topY + self.linkHeight + dy > app.lowestFloor):
+                # An if-statement to determine whether Link is colliding with floor
+                # or with a block
                 if (self.topY + self.linkHeight + dy > app.lowestFloor):
                     self.topY = app.lowestFloor - self.linkHeight
                     self.centerY = app.lowestFloor - (self.linkHeight)/2
                 else:
                     self.topY = top - self.linkHeight
                     self.centerY = top - (self.linkHeight)/2
+                # Link has to be standing on a ground
                 self.isOnGround = True
                 return True
             elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height 
                   and left < self.centerX < left + width and self.isJumping):
                 self.topY = top + height
                 self.centerY = top + height + (self.linkHeight)/2
+                # "Hitting" his head means that Link is no longer jumping but 
+                # is instead falling
                 self.isJumping = False
                 self.isFalling = True
                 return True
@@ -122,6 +132,7 @@ class Link:
         else:
             Link.velocity += 2
 
+    # Checking whether Link is on a ground
     def checkGround(self):
         if (self.topY + self.linkHeight + 1 > app.lowestFloor): 
             self.isOnGround = True
@@ -131,6 +142,7 @@ class Link:
                     self.isOnGround = True
             self.isOnGround = False
     
+    # Falling movement
     def fall(self):
         self.move(app, 0, Link.gravity)
         if (self.isOnGround):

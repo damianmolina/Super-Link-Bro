@@ -34,6 +34,7 @@ def moveBlocks(app, dx, dy):
         newLeft, newTop = left + dx, top + dy
         app.collisionBlocks[i] = (newLeft, newTop, width, height)
 
+# Creates a 2D list with "1" where blocks are to be placed
 def getRowsAndCols():
     result = []
     for row in range(app.rows):

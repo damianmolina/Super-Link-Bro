@@ -28,7 +28,7 @@ def getCellLeftTop(app, row, col):
     cellTop = app.levelTop + row * cellHeight
     return (cellLeft, cellTop)
 
-
+# Creates a randomly generated 2D list for the terrain
 def randomLevel():
     result = createEmpty2DList()
     rows, cols = len(result), len(result[0])
@@ -49,6 +49,7 @@ def randomLevel():
         
     return result
 
+# Creates a empty 2D list with specified rows and columns
 def createEmpty2DList():
     result = []
     rows = 12
@@ -57,6 +58,8 @@ def createEmpty2DList():
         result.append([0] * cols)
     return result
 
+
+# Transforms a column into a list
 def getColAsList(L, col):
     result = []
     rows = len(L)
@@ -66,6 +69,8 @@ def getColAsList(L, col):
     
     return result
     
+# This randomly generates how many blocks will be in each column, which is also
+# dependent on the previous column
 def getBlocks(prevCol):
     if (prevCol == None):
         prevColLength = 0
