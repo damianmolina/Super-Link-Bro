@@ -41,7 +41,7 @@ def getRowsAndCols():
         for col in range(app.cols):
             if (row in {0, 1, 2, 3, 4}):
                 currRow.append(0)
-            elif (row == 9 and col == 16):
+            elif (row == 8 and col == 16):
                 currRow.append(1)
             elif (row == 8 and col == 20):
                 currRow.append(1)
