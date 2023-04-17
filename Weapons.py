@@ -19,12 +19,17 @@ class Arrow:
 
         self.arrowLeftX = app.width/2
         self.arrowTopY = app.link.topY
+
+        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
     
     def shoot(self):
+        offset = (app.link.leftX - app.levelLeft) - self.linkDistanceFromLevel
+        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
+
         if (self.lookingRight):
-            self.arrowLeftX += 10
+            self.arrowLeftX += (15 - offset)
         else:
-            self.arrowLeftX -= 10
+            self.arrowLeftX -= (15 + offset)
         
     def __eq__(self, other):
         if (not isinstance(other, Arrow)): return False
@@ -55,6 +60,8 @@ class Bomb:
         self.bombCenterY = self.bombTopY + (self.bombHeight)/2
         self.hasCollided = False
 
+        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
+
     def __eq__(self, other):
         if (not isinstance(other, Bomb)): return False
 
@@ -66,10 +73,13 @@ class Bomb:
     
     def move(self, app):
         dy = Bomb.velocityY + Bomb.gravity
-        if (not self.isCollisionY(app, dy) and not self.isCollisionX(app, self.velocityX)):
-            self.bombLeftX += self.velocityX
-            self.bombCenterX += self.velocityX
 
+        offset = (app.link.leftX - app.levelLeft) - self.linkDistanceFromLevel
+        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
+
+        if (not self.isCollisionY(app, dy) and not self.isCollisionX(app, self.velocityX)):
+            self.bombLeftX += (self.velocityX - offset)
+            self.bombCenterX += (self.velocityX - offset)
             self.bombTopY += dy
             self.bombCenterY += dy
             Bomb.velocityY += 2
