@@ -37,7 +37,7 @@ def onAppStart(app):
     app.lowestFloor = app.levelHeight
 
     # Collision blocks
-    app.collisionBlocks = getFirstLevel(app)
+    app.collisionBlocks = getRandomWorld(app)
 
     # Create Link object
     app.link = Link(app)
@@ -113,7 +113,8 @@ def onKeyRelease(app, key):
 def onStep(app):
     if (app.moveRight):
         app.link.move(app, app.link.moveSpeed, 0)
-    elif (app.moveLeft):
+
+    if (app.moveLeft):
         app.link.move(app, -(app.link.moveSpeed), 0)
 
     if (app.link.isJumping):
@@ -133,6 +134,7 @@ def onStep(app):
             app.bombs.pop()
         else:
             app.bombs[0].move(app)
+    
     
     
     

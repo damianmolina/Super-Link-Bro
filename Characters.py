@@ -13,16 +13,17 @@ class Link:
         linkSpriteSheet = linkSpriteSheet.resize((268, 228))
         linkSpriteSheet = linkSpriteSheet.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         self.walk = linkSpriteSheet.crop((53, 0, 106, 50))
+        self.walk = self.walk.resize((40, 40))
         self.bow = linkSpriteSheet.crop((80, 121, 133, 171))
 
         # Sets current image of Link walking
         self.image = self.walk
 
         # The dimensions of Link's boundary box
-        self.leftX = app.width/2 - 25
-        self.topY = 358
-        self.linkWidth = 50
-        self.linkHeight = 45
+        self.linkWidth = 32
+        self.linkHeight = 32
+        self.leftX = app.width/2 - (self.linkWidth)/2
+        self.topY = 368
         self.centerX = self.leftX + (self.linkWidth)/2
         self.centerY = self.topY + (self.linkHeight)/2
 
@@ -54,7 +55,7 @@ class Link:
             app.levelLeft -= dx
         
         # Checks if moving left and not out of bounds and is not colliding
-        elif (dx < 0 and not self.isCollisionX(app, dx) and not app.levelLeft >= 0):
+        if (dx < 0 and not self.isCollisionX(app, dx) and not app.levelLeft >= 0):
             moveBlocks(app, -dx, dy)
             app.levelLeft -= dx
         
@@ -69,15 +70,17 @@ class Link:
     def isCollisionX(self, app, dx):
         # Goes through each block
         for left, top, width, height in app.collisionBlocks:
+            blockCenterY = top + height/2
+            #print(left)
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
-            if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + dx > left 
-                and top < self.centerY < top + height):
+            if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + 1 > left
+                and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
                 app.levelLeft -= (left - (self.leftX + self.linkWidth))
                 return True
-            elif (dx < 0 and self.leftX > left and self.leftX - dx < left + width 
-                  and top < self.centerY < top + height):
+            elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
+                  and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, self.leftX - (left + width), 0)
                 app.levelLeft += self.leftX - (left + width)
                 return True
@@ -86,11 +89,12 @@ class Link:
     # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
         for left, top, width, height in app.collisionBlocks:
+            blockCenterX = left + width/2
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
             if (dy > 0 and self.topY < top and self.topY + self.linkHeight + dy > top 
-                and left < self.centerX < left + width
-                or self.topY + self.linkHeight + dy > app.lowestFloor):
+                and abs(blockCenterX - self.centerX) < self.linkWidth - 5
+                or (self.topY + self.linkHeight + dy > app.lowestFloor and self.isFalling)):
                 # An if-statement to determine whether Link is colliding with floor
                 # or with a block
                 if (self.topY + self.linkHeight + dy > app.lowestFloor):
@@ -103,7 +107,7 @@ class Link:
                 self.isOnGround = True
                 return True
             elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height 
-                  and left < self.centerX < left + width and self.isJumping):
+                  and abs(blockCenterX - self.centerX) < self.linkWidth - 5 and self.isJumping):
                 self.topY = top + height
                 self.centerY = top + height + (self.linkHeight)/2
                 # "Hitting" his head means that Link is no longer jumping but 
