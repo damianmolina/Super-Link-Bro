@@ -56,7 +56,8 @@ def onAppStart(app):
 
     # Brick image from https://www.vhv.rs/viewpic/TihwJTi_mario-brick-png-super-mario-bros-block-pixel/
     app.brick = Image.open('Images/Brick.png')
-    app.brick = app.brick.resize((36,36))
+    app.brick = app.brick.crop((40, 40, 830, 830))
+    app.brick = app.brick.resize((32,32))
     
 
 def redrawAll(app):
