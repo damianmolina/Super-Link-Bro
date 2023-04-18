@@ -1,6 +1,5 @@
 from cmu_graphics import *
 from PIL import Image
-from Characters import *
 
 # Draws all of the blocks from level 1
 def getFirstLevel(app):

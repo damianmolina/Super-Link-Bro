@@ -58,6 +58,7 @@ def onAppStart(app):
     app.brick = Image.open('Images/Brick.png')
     app.brick = app.brick.crop((40, 40, 830, 830))
     app.brick = app.brick.resize((32,32))
+
     
 
 def redrawAll(app):
