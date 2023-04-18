@@ -53,6 +53,10 @@ def onAppStart(app):
 
     # Stalfo
     app.stalfo = Stalfo(app)
+
+    # Brick image from https://www.vhv.rs/viewpic/TihwJTi_mario-brick-png-super-mario-bros-block-pixel/
+    app.brick = Image.open('Images/Brick.png')
+    app.brick = app.brick.resize((36,36))
     
 
 def redrawAll(app):
@@ -86,7 +90,7 @@ def onMouseMove(app, mouseX, mouseY):
 # Draws collision blocks from list of app.collisionBlocks
 def drawBlocks(app):
     for left, top, width, height in app.collisionBlocks:
-        drawRect(left, top, width, height)
+        drawImage(CMUImage(app.brick), left, top)
 
 # Controls movements of Link
 def onKeyPress(app, key):
