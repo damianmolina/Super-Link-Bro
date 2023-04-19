@@ -1,7 +1,6 @@
 from cmu_graphics import *
 from PIL import Image
 from Characters import *
-from FirstLevel import *
 
 class Arrow:
     def __init__(self, app):

@@ -1,7 +1,6 @@
 from cmu_graphics import *
 from PIL import Image
 from Characters import *
-from FirstLevel import *
 from Weapons import *
 from RandomWorld import *
 
@@ -33,7 +32,7 @@ def onAppStart(app):
     app.lowestFloor = app.levelHeight
 
     # Collision blocks
-    app.collisionBlocks, app.mapAs2DList = getRandomWorld(app)
+    app.collisionBlocks, app.itemBlocks, app.mapAs2DList = getRandomWorld(app)
 
     # Create Link object
     app.link = Link(app)
@@ -97,6 +96,9 @@ def onMouseMove(app, mouseX, mouseY):
 def drawBlocks(app):
     for left, top, width, height in app.collisionBlocks:
         drawImage(CMUImage(app.brick), left, top)
+    
+    for left, top, width, height in app.itemBlocks:
+        drawRect(left, top, width, height)
 
 # Controls movements of Link
 def onKeyPress(app, key):

@@ -1,6 +1,6 @@
 from cmu_graphics import *
 from PIL import Image
-from FirstLevel import *
+from RandomWorld import *
 
 class Link:
     originalVelocity = -25
