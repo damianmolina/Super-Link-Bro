@@ -26,16 +26,10 @@ class Arrow:
         self.arrowCenterX = self.arrowLeftX + (self.arrowWidth)/2
         self.arrowCenterY = self.arrowTopY + (self.arrowHeight)/2
 
-        # Link's distance from beginning of level which will be used for later offsets
-        self.linkDistanceFromLevel = app.link.leftX - app.changeInBackground
 
         self.hasCollided = False
     
     def shoot(self):
-        # This is the amount that Link has moved since shooting the arrow
-        offset = (app.link.leftX - app.changeInBackground) - self.linkDistanceFromLevel
-        self.linkDistanceFromLevel = app.link.leftX - app.changeInBackground
-
         # Moves arrow in the direction that Link was facing 
         if (self.lookingRight and not self.isCollisionX(app, self.arrowSpeed)):
             self.arrowLeftX += (self.arrowSpeed)
@@ -103,8 +97,6 @@ class Bomb:
         # Initially has not collided with anything
         self.hasCollided = False
 
-        # Link's distance from beginning of level which will be used for later offsets
-        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
 
     # Bombs are equal to each other when they're at the same location
     def __eq__(self, other):
@@ -120,14 +112,10 @@ class Bomb:
         # Current change in y-direction
         dy = Bomb.velocityY + Bomb.gravity
 
-        # This is the amount that Link has moved since throwing the bomb
-        offset = (app.link.leftX - app.levelLeft) - self.linkDistanceFromLevel
-        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
-
         # Check for any collisions
         if (not self.isCollisionY(app, dy) and not self.isCollisionX(app, self.velocityX)):
-            self.bombLeftX += (self.velocityX - offset)
-            self.bombCenterX += (self.velocityX - offset)
+            self.bombLeftX += self.velocityX 
+            self.bombCenterX += self.velocityX 
             self.bombTopY += dy
             self.bombCenterY += dy
             Bomb.velocityY += 2

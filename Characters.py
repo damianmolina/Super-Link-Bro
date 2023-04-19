@@ -1,6 +1,7 @@
 from cmu_graphics import *
 from PIL import Image
 from RandomWorld import *
+import random
 
 class Link:
     originalVelocity = -25
@@ -168,13 +169,28 @@ class Tektite:
     def __init__(self, app):
         # From https://www.pixilart.com/art/tektite-sprite-3dae6d7691bf058
         tektite = Image.open('Images/Tektite.png')
-        tektite = tektite.resize((150, 150))
+        tektite = tektite.resize((32, 32))
         self.image = tektite
+        probOfSide = random.random()
+        if (probOfSide > 0.5):
+            self.tektiteLeftX = 928
+        else:
+            self.tektiteLeftX = -64
+        
+        self.tektiteTopY = 0
     
 
 class Stalfo:
     def __init__(self, app):
         # From https://www.deviantart.com/captainedwardteague/art/Original-The-Zelda-Stalfos-Sprite-858214933
         stalfo = Image.open('Images/Stalfo.png')
-        stalfo = stalfo.resize((50, 50))
+        stalfo = stalfo.resize((32, 32))
         self.image = stalfo
+
+        probOfSide = random.random()
+        if (probOfSide > 0.5):
+            self.stalfoLeftX = 928
+        else:
+            self.stalfoLeftX = -64
+        
+        self.stalfoTopY = 0

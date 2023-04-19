@@ -3,6 +3,7 @@ from PIL import Image
 from Characters import *
 from Weapons import *
 from RandomWorld import *
+import random
 
 def onAppStart(app):
     # Screen width and height
@@ -43,11 +44,11 @@ def onAppStart(app):
     # Bombs
     app.bombs = list()
 
-    # Tektite
-    app.tektite = Tektite(app)
+    # Tektites
+    app.tektites = list()
 
-    # Stalfo
-    app.stalfo = Stalfo(app)
+    # Stalfos
+    app.stalfos = list()
 
     # Brick image from https://www.vhv.rs/viewpic/TihwJTi_mario-brick-png-super-mario-bros-block-pixel/
     app.brick = Image.open('Images/Brick.png')
@@ -83,8 +84,11 @@ def redrawAll(app):
 
     drawLink(app)
 
+    drawEnemies(app)
+
     # Draws pointer for (x,y) of mouse
     drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
+
 
 
 # To help with knowing where the mouse is
@@ -146,7 +150,15 @@ def onStep(app):
             app.bombs.pop()
         else:
             app.bombs[0].move(app)
-    
+
+    totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
+    if (totalNumOfEnemies < 4):
+        prob = random.random()
+        if (prob > 0.9):
+            if (prob > 0.95):
+                app.tektites.append(Tektite(app))
+            else:
+                app.stalfos.append(Stalfo(app))
     generateWorld(app)
     
 
@@ -166,6 +178,13 @@ def drawLink(app):
     
     # Draws Link
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
+
+def drawEnemies(app):
+    for tektite in app.tektites:
+        drawImage(CMUImage(tektite.image), tektite.tektiteLeftX, tektite.tektiteTopY)
+    
+    for stalfo in app.stalfos:
+        drawImage(CMUImage(stalfo.image), stalfo.stalfoLeftX, stalfo.stalfoTopY)
 
 def generateWorld(app):
     if (app.changeInBackground < -32):
