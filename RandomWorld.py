@@ -12,7 +12,7 @@ def getRandomWorld(app):
         for col in range(cols):
             if blocks[row][col] == 1:
                 result.append(getCell(app, row, col))
-    return result
+    return result, blocks
 
 # These methods are from CSAcademy exercises relating to drawing grids, however,
 # the code is modified to help fit my game
@@ -33,7 +33,7 @@ def randomLevel():
     result = createEmpty2DList()
     rows, cols = len(result), len(result[0])
     for col in range(cols):
-        if (col in {num for num in range(15)}): continue
+        #if (col in {num for num in range(15)}): continue
 
         prevCol = getColAsList(result, col)
         
@@ -46,14 +46,14 @@ def randomLevel():
         
         for i in range(numOfBlocks):
             result[-i - 1][col] = 1
-        
+    
     return result
 
 # Creates a empty 2D list with specified rows and columns
 def createEmpty2DList():
     result = []
     rows = 12
-    cols = 50
+    cols = 34
     for row in range(rows):
         result.append([0] * cols)
     return result
@@ -88,3 +88,33 @@ def getBlocks(prevCol):
             return prevColLength + random.randint(1, 2)
         else:
             return abs(prevColLength - random.randint(1, 2))
+
+def generateRightCol(app):
+    shiftLeft(app)
+    rows, cols = len(app.mapAs2DList), len(app.mapAs2DList[0])
+    prevCol = getColAsList(app.mapAs2DList, cols - 2)
+    numOfNewBlocks = getBlocks(prevCol)
+
+    for i in range(numOfNewBlocks):
+        app.mapAs2DList[-i - 1][-1] = 1
+    
+    generateNewWorld(app)
+
+def shiftLeft(app):
+    emptyList = createEmpty2DList()
+    rows, cols = len(emptyList), len(emptyList[0])
+    for i in range(rows):
+        for j in range(cols - 1):
+            emptyList[i][j] = app.mapAs2DList[i][j + 1]
+    
+    app.mapAs2DList = emptyList
+
+def generateNewWorld(app):
+    result = []
+    rows, cols = len(app.mapAs2DList), len(app.mapAs2DList[0])
+    for row in range(rows):
+        for col in range(cols):
+            if app.mapAs2DList[row][col] == 1:
+                result.append(getCell(app, row, col))
+
+    app.collisionBlocks = result

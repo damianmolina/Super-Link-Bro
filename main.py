@@ -23,7 +23,7 @@ def onAppStart(app):
     # Attributes for grid in the background
     app.rows = 13
     app.cols = 212
-    app.levelLeft = 0
+    app.levelLeft = -96
     app.levelTop = 16
     app.levelWidth = 6768
     app.levelHeight = 400
@@ -33,7 +33,7 @@ def onAppStart(app):
     app.lowestFloor = app.levelHeight
 
     # Collision blocks
-    app.collisionBlocks = getRandomWorld(app)
+    app.collisionBlocks, app.mapAs2DList = getRandomWorld(app)
 
     # Create Link object
     app.link = Link(app)
@@ -65,6 +65,8 @@ def onAppStart(app):
     app.ground = app.ground.crop((0, 1550, 2880, 1800))
     app.ground = app.ground.resize((app.ground.width//3, app.ground.height//3))
 
+    app.changeInBackground = 0
+
     
 
 def redrawAll(app):
@@ -81,12 +83,7 @@ def redrawAll(app):
 
     drawBombs(app)   
 
-    # Draws Link's boundary box
-    drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
-             app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
-    
-    # Draws Link
-    drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
+    drawLink(app)
 
     # Draws pointer for (x,y) of mouse
     drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
@@ -149,6 +146,8 @@ def onStep(app):
         else:
             app.bombs[0].move(app)
     
+    generateWorld(app)
+    
 
 def drawArrows(app):
     for arrow in app.arrows:
@@ -157,7 +156,24 @@ def drawArrows(app):
 def drawBombs(app):
     if (len(app.bombs) > 0):
         bomb = app.bombs[0]
-        drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)        
+        drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)
+
+def drawLink(app):
+    # Draws Link's boundary box
+    drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
+             app.link.linkHeight, fill = None, border = 'black',borderWidth = 2)
+    
+    # Draws Link
+    drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
+
+def generateWorld(app):
+    outOfBoundsLimit = 96
+    for left, top, width, height in app.collisionBlocks:
+        if (left < -outOfBoundsLimit):
+            generateRightCol(app)
+        elif (left + width > app.width + outOfBoundsLimit):
+            #generateLeftCol(app)
+            return 42
 
     
 # Runs game

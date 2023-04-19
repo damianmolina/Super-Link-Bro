@@ -24,7 +24,7 @@ class Link:
         self.linkWidth = 32
         self.linkHeight = 32
         self.leftX = app.width/2 - (self.linkWidth)/2
-        self.topY = 368
+        self.topY = 0
         self.centerX = self.leftX + (self.linkWidth)/2
         self.centerY = self.topY + (self.linkHeight)/2
 
@@ -35,9 +35,9 @@ class Link:
         self.isJumping = False
 
         # Whether Link is on the ground or not
-        self.isOnGround = True
+        self.isOnGround = False
 
-        self.isFalling = False
+        self.isFalling = True
 
         # Link's movement speed
         self.moveSpeed = 10
@@ -53,12 +53,12 @@ class Link:
         # Check if moving right and not colliding
         if (dx > 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
-            app.levelLeft -= dx
+            #app.levelLeft -= dx
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
-            app.levelLeft -= dx
+            #app.levelLeft -= dx
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
@@ -78,12 +78,12 @@ class Link:
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + 1 > left
                 and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
-                app.levelLeft -= (left - (self.leftX + self.linkWidth))
+                #app.levelLeft -= (left - (self.leftX + self.linkWidth))
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, self.leftX - (left + width), 0)
-                app.levelLeft += self.leftX - (left + width)
+                #app.levelLeft += self.leftX - (left + width)
                 return True
         return False
 
