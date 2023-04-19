@@ -99,8 +99,22 @@ def generateRightCol(app):
         L[-i - 1][-1] = 1
     
     app.mapAs2DList = L
-    
+
     generateNewWorld(app)
+
+def generateLeftCol(app):
+    L = shiftRight(app)
+    rows, cols = len(L), len(L[0])
+    prevCol = getColAsList(L, 1)
+    numOfNewBlocks = getBlocks(prevCol)
+    
+    for i in range(numOfNewBlocks):
+        L[-i - 1][0] = 1
+    
+    app.mapAs2DList = L
+
+    generateNewWorld(app)
+
 
 def shiftLeft(app):
     emptyList = createEmpty2DList()
@@ -108,6 +122,19 @@ def shiftLeft(app):
     for i in range(rows):
         for j in range(cols - 1):
             emptyList[i][j] = app.mapAs2DList[i][j + 1]
+
+    result = emptyList
+
+    return result
+
+def shiftRight(app):
+    emptyList = createEmpty2DList()
+    rows, cols = len(emptyList), len(emptyList[0])
+
+    for i in range(rows):
+        for j in range(cols):
+            if (j == 0): continue
+            emptyList[i][j] = app.mapAs2DList[i][j - 1]
 
     result = emptyList
 

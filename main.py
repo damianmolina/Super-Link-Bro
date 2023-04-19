@@ -71,7 +71,6 @@ def onAppStart(app):
 
 def redrawAll(app):
     # Draws the background
-    #drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
     drawImage(CMUImage(app.clouds), 0, 0)
 
     drawImage(CMUImage(app.ground), 0, 400)
@@ -135,10 +134,11 @@ def onStep(app):
         app.link.fall()
     
     for arrow in app.arrows:
-        if (arrow.arrowLeftX < 0 or arrow.arrowLeftX > app.width):
+        if (arrow.hasCollided):
             app.arrows.remove(arrow)
         else:
             arrow.shoot()
+
     
     if (len(app.bombs) > 0):
         if (app.bombs[0].hasCollided):
@@ -167,13 +167,12 @@ def drawLink(app):
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
 
 def generateWorld(app):
-    outOfBoundsLimit = 96
     if (app.changeInBackground < -32):
         generateRightCol(app)
         app.changeInBackground = 0
-    elif (app.changeInBackground > app.width + outOfBoundsLimit):
-        #generateLeftCol(app)
-        return 42
+    elif (app.changeInBackground > 32):
+        generateLeftCol(app)
+        app.changeInBackground = 0
 
     
 # Runs game
