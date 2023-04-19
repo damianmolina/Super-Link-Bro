@@ -87,9 +87,9 @@ class Bomb:
         # Determines the direction in which the bomb is pointing as well as velocity
         # in the x-direction
         if (app.link.lookingRight):
-            self.velocityX = 10
+            self.velocityX = 15
         else:
-            self.velocityX = -10
+            self.velocityX = -15
             bomb = bomb.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         
         self.image = bomb

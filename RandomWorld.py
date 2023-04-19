@@ -80,14 +80,14 @@ def getBlocks(prevCol):
     prob = random.random()
     
     if (prevColLength == 0):
-        return prevColLength + random.randint(1, 2)
+        return prevColLength + random.randint(0, 1)
     elif (prevColLength >= 10):
-        return prevColLength - random.randint(1, 2)
+        return prevColLength - random.randint(0, 1)
     else:
         if (prob > 0.5):
-            return prevColLength + random.randint(1, 2)
+            return prevColLength + random.randint(0, 1)
         else:
-            return abs(prevColLength - random.randint(1, 2))
+            return abs(prevColLength - random.randint(0, 1))
 
 def generateRightCol(app):
     L = shiftLeft(app)
