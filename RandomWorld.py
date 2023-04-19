@@ -90,13 +90,15 @@ def getBlocks(prevCol):
             return abs(prevColLength - random.randint(1, 2))
 
 def generateRightCol(app):
-    shiftLeft(app)
-    rows, cols = len(app.mapAs2DList), len(app.mapAs2DList[0])
-    prevCol = getColAsList(app.mapAs2DList, cols - 2)
+    L = shiftLeft(app)
+    rows, cols = len(L), len(L[0])
+    prevCol = getColAsList(L, cols - 2)
     numOfNewBlocks = getBlocks(prevCol)
 
     for i in range(numOfNewBlocks):
-        app.mapAs2DList[-i - 1][-1] = 1
+        L[-i - 1][-1] = 1
+    
+    app.mapAs2DList = L
     
     generateNewWorld(app)
 
@@ -106,8 +108,10 @@ def shiftLeft(app):
     for i in range(rows):
         for j in range(cols - 1):
             emptyList[i][j] = app.mapAs2DList[i][j + 1]
-    
-    app.mapAs2DList = emptyList
+
+    result = emptyList
+
+    return result
 
 def generateNewWorld(app):
     result = []

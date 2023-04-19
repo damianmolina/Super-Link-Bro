@@ -54,11 +54,13 @@ class Link:
         if (dx > 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
             #app.levelLeft -= dx
+            app.changeInBackground -= dx
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
             #app.levelLeft -= dx
+            app.changeInBackground -= dx
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
@@ -79,11 +81,13 @@ class Link:
                 and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
                 #app.levelLeft -= (left - (self.leftX + self.linkWidth))
+                app.changeInBackground -= (left - (self.leftX + self.linkWidth))
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, self.leftX - (left + width), 0)
                 #app.levelLeft += self.leftX - (left + width)
+                app.changeInBackground += self.leftX - (left + width)
                 return True
         return False
 

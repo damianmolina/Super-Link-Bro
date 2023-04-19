@@ -168,12 +168,12 @@ def drawLink(app):
 
 def generateWorld(app):
     outOfBoundsLimit = 96
-    for left, top, width, height in app.collisionBlocks:
-        if (left < -outOfBoundsLimit):
-            generateRightCol(app)
-        elif (left + width > app.width + outOfBoundsLimit):
-            #generateLeftCol(app)
-            return 42
+    if (app.changeInBackground < -32):
+        generateRightCol(app)
+        app.changeInBackground = 0
+    elif (app.changeInBackground > app.width + outOfBoundsLimit):
+        #generateLeftCol(app)
+        return 42
 
     
 # Runs game
