@@ -11,10 +11,6 @@ def onAppStart(app):
     app.height = 448
     app.stepsPerSecond = 15
 
-    # Get the first level image
-    # From https://ian-albert.com/games/super_mario_bros_maps/
-    app.firstLevel = Image.open('Images/Mario 1-1.png')
-    app.firstLevel = app.firstLevel.resize((app.firstLevel.width * 2, app.firstLevel.height * 2))
 
     # Attributes to track where the mouse is
     app.labelX = 0
@@ -59,12 +55,24 @@ def onAppStart(app):
     app.brick = app.brick.crop((40, 40, 830, 830))
     app.brick = app.brick.resize((32,32))
 
+    # From https://ian-albert.com/games/super_mario_bros_maps/
+    app.clouds = Image.open('Images/Background.png')
+    app.clouds = app.clouds.crop((0, 0, 3384, 200))
+    app.clouds = app.clouds.resize((app.clouds.width * 2, app.clouds.height * 2))
+
+    # From https://www.wallpaperflare.com/super-mario-walk-mustache-grass-vector-backgrounds-illustration-wallpaper-sate/download/2880x1800
+    app.ground = Image.open('Images/Ground.jpg')
+    app.ground = app.ground.crop((0, 1550, 2880, 1800))
+    app.ground = app.ground.resize((app.ground.width//3, app.ground.height//3))
+
     
 
 def redrawAll(app):
-    
     # Draws the background
-    drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
+    #drawImage(CMUImage(app.firstLevel), app.levelLeft, 0)
+    drawImage(CMUImage(app.clouds), 0, 0)
+
+    drawImage(CMUImage(app.ground), 0, 400)
 
     # Draw all of the collision blocks
     drawBlocks(app)
@@ -140,9 +148,6 @@ def onStep(app):
             app.bombs.pop()
         else:
             app.bombs[0].move(app)
-    
-    
-    
     
 
 def drawArrows(app):

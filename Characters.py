@@ -56,7 +56,7 @@ class Link:
             app.levelLeft -= dx
         
         # Checks if moving left and not out of bounds and is not colliding
-        if (dx < 0 and not self.isCollisionX(app, dx) and not app.levelLeft >= 0):
+        if (dx < 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
             app.levelLeft -= dx
         
