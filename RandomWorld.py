@@ -3,7 +3,7 @@ from PIL import Image
 from Characters import *
 import random
 
-# Draws all of the blocks from level 1
+
 def getRandomWorld(app):
     blocks = randomLevel()
     floor = []
@@ -72,8 +72,7 @@ def getColAsList(L, col):
     
     return result
     
-# This randomly generates how many blocks will be in each column, which is also
-# dependent on the previous column
+
 def getBlocks(prevCol):
     result = []
     if (prevCol == None):

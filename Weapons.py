@@ -75,7 +75,7 @@ class Bomb:
     def __init__(self, app):
         # From https://www.pinterest.com.mx/pin/345158758920841396/
         bomb = Image.open('Images/Bomb.png')
-        bomb = bomb.resize((40, 40))
+        bomb = bomb.resize((32, 32))
 
         # Determines the direction in which the bomb is pointing as well as velocity
         # in the x-direction
@@ -90,7 +90,7 @@ class Bomb:
         # Location of bomb
         self.bombLeftX = app.width/2
         self.bombTopY = app.link.topY
-        self.bombWidth = self.bombHeight = 40
+        self.bombWidth = self.bombHeight = 32
         self.bombCenterX = self.bombLeftX + (self.bombWidth)/2
         self.bombCenterY = self.bombTopY + (self.bombHeight)/2
 
@@ -127,29 +127,32 @@ class Bomb:
     def isCollisionX(self, app, dx):
          # Goes through each block
         for left, top, width, height in app.collisionBlocks:
-            # Checks direction of movement, whether it will collide and whether 
-            # the bomb's center is in the right spot for a collision to occur
-            if (dx > 0 and self.bombLeftX < left and self.bombLeftX + self.bombWidth + 1 > left 
-                and top < self.bombCenterY < top + height):
+            blockCenterY = top + height/2
+            # Checks direction of movement, whether it will collide and whether Link's center
+            # is in the right spot for a collision to occur
+            if (dx > 0 and self.bombLeftX < left and self.bombLeftX + self.bombWidth + 1 > left
+                and abs(blockCenterY - self.bombCenterY) < self.bombHeight):
                 self.hasCollided = True
                 return True
             elif (dx < 0 and self.bombLeftX > left and self.bombLeftX - 1 < left + width 
-                  and top < self.bombCenterY < top + height):
+                  and abs(blockCenterY - self.bombCenterY) < self.bombHeight):
                 self.hasCollided = True
                 return True
         return False
 
     # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
-         # Goes through each block
         for left, top, width, height in app.collisionBlocks:
-            # Checks direction of movement, whether it will collide and whether 
-            # the bomb's center is in the right spot for a collision to occur
-            if (dy > 0 and self.bombTopY < top and self.bombTopY + self.bombHeight + 1 > top and left < self.bombCenterX < left + width
-                or self.bombTopY + self.bombHeight + 1 > app.lowestFloor):
+            blockCenterX = left + width/2
+            # Checks direction of movement, whether it will collide and whether Link's center
+            # is in the right spot for a collision to occur
+            if (dy > 0 and self.bombTopY < top and self.bombTopY + self.bombHeight + 1 > top 
+                and abs(blockCenterX - self.bombCenterX) < self.bombWidth - 5
+                or (self.bombTopY + self.bombHeight + 1 > app.lowestFloor)):
                 self.hasCollided = True
                 return True
-            elif (dy < 0 and self.bombTopY > top + height and self.bombTopY + 1 < top + height and left < self.bombCenterX < left + width):
+            elif (dy < 0 and self.bombTopY > top + height and self.bombTopY + 1 < top + height 
+                  and abs(blockCenterX - self.bombCenterX) < self.bombWidth - 5):
                 self.hasCollided = True
                 return True
         return False
