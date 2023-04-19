@@ -112,14 +112,13 @@ def onKeyPress(app, key):
     elif (key == 'o'):
         app.bombs.append(Bomb(app))
 
-# Makes sure to stop moving Link
+# Makes sure to stop moving Link left or rightd.a
 def onKeyRelease(app, key):
     if (key == 'd'):
         app.moveRight = False
     elif (key == 'a'):
         app.moveLeft = False
 
-# Moves Link when keys are pressed
 def onStep(app):
     if (app.moveRight):
         app.link.move(app, app.link.moveSpeed, 0)

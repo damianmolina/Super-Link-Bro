@@ -28,20 +28,20 @@ class Arrow:
         self.arrowCenterY = self.arrowTopY + (self.arrowHeight)/2
 
         # Link's distance from beginning of level which will be used for later offsets
-        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
+        self.linkDistanceFromLevel = app.link.leftX - app.changeInBackground
 
         self.hasCollided = False
     
     def shoot(self):
         # This is the amount that Link has moved since shooting the arrow
-        offset = (app.link.leftX - app.levelLeft) - self.linkDistanceFromLevel
-        self.linkDistanceFromLevel = app.link.leftX - app.levelLeft
+        offset = (app.link.leftX - app.changeInBackground) - self.linkDistanceFromLevel
+        self.linkDistanceFromLevel = app.link.leftX - app.changeInBackground
 
         # Moves arrow in the direction that Link was facing 
         if (self.lookingRight and not self.isCollisionX(app, self.arrowSpeed)):
-            self.arrowLeftX += (self.arrowSpeed - offset)
+            self.arrowLeftX += (self.arrowSpeed)
         elif (not self.lookingRight and not self.isCollisionX(app, -self.arrowSpeed)):
-            self.arrowLeftX -= (self.arrowSpeed + offset)
+            self.arrowLeftX -= (self.arrowSpeed)
 
     
     # Checks for any horizontal collisions
@@ -61,23 +61,6 @@ class Arrow:
                 return True
         return False
     
-    # # Checks for any horizontal collisions
-    # def isCollisionX(self, app, dx):
-    #      # Goes through each block
-    #     for left, top, width, height in app.collisionBlocks:
-    #         # Checks direction of movement, whether it will collide and whether 
-    #         # the bomb's center is in the right spot for a collision to occur
-    #         if (dx > 0 and self.arrowLeftX < left and self.arrowLeftX + self.arrowWidth + 1 > left 
-    #             and top < self.arrowCenterY < top + height
-    #             or self.arrowLeftX > app.width):
-    #             self.hasCollided = True
-    #             return True
-    #         elif (dx < 0 and self.arrowLeftX > left and self.arrowLeftX - 1 < left + width 
-    #               and top < self.arrowCenterY < top + height
-    #               or self.arrowLeftX + self.arrowWidth < 0):
-    #             self.hasCollided = True
-    #             return True
-    #     return False
         
     # Arrows are equal to each other when they're at the same location
     def __eq__(self, other):
@@ -86,6 +69,12 @@ class Arrow:
             return True
         else:
             return False
+        
+    def offset(self, app, dx):
+        if (dx > 0):
+            self.arrowLeftX -= dx
+        else:
+            self.arrowLeftX -= dx
     
 class Bomb:
     velocityY = -10 
@@ -178,3 +167,8 @@ class Bomb:
                 return True
         return False
     
+    def offset(self, app, dx):
+        if (dx > 0):
+            self.bombLeftX -= dx
+        else:
+            self.bombLeftX -= dx

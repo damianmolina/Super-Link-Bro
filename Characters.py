@@ -53,14 +53,14 @@ class Link:
         # Check if moving right and not colliding
         if (dx > 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
-            #app.levelLeft -= dx
             app.changeInBackground -= dx
+            self.offsetWeapons(app, dx)
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
-            #app.levelLeft -= dx
             app.changeInBackground -= dx
+            self.offsetWeapons(app, dx)
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
@@ -74,19 +74,16 @@ class Link:
         # Goes through each block
         for left, top, width, height in app.collisionBlocks:
             blockCenterY = top + height/2
-            #print(left)
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + 1 > left
                 and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
-                #app.levelLeft -= (left - (self.leftX + self.linkWidth))
                 app.changeInBackground -= (left - (self.leftX + self.linkWidth))
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, self.leftX - (left + width), 0)
-                #app.levelLeft += self.leftX - (left + width)
                 app.changeInBackground += self.leftX - (left + width)
                 return True
         return False
@@ -159,6 +156,13 @@ class Link:
             Link.currVelocity = Link.originalVelocity
         else:
             Link.gravity += 2
+    
+    def offsetWeapons(self, app, dx):
+        for arrow in app.arrows:
+            arrow.offset(app, dx)
+        
+        for bomb in app.bombs:
+            bomb.offset(app, dx)
 
 class Tektite:
     def __init__(self, app):
@@ -166,6 +170,7 @@ class Tektite:
         tektite = Image.open('Images/Tektite.png')
         tektite = tektite.resize((150, 150))
         self.image = tektite
+    
 
 class Stalfo:
     def __init__(self, app):
