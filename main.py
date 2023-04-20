@@ -160,7 +160,7 @@ def onStep(app):
             app.bombs[0].move(app)
 
     totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
-    if (totalNumOfEnemies < 1):
+    if (totalNumOfEnemies < 4):
         prob = random.random()
         if (prob > 0.9):
             if (prob > 0.95):
@@ -173,7 +173,9 @@ def onStep(app):
             else:
                 tektite.moveAwayFromLink(app, tektite.moveSpeed)
 
-            if (app.prob > 0.7):
+            print(tektite.leftX, tektite.centerX)
+            prob = random.random()
+            if (prob > 0.98):
                 tektite.isJumping = True
     else:
         app.prob = random.random()
@@ -184,11 +186,6 @@ def onStep(app):
         if (tektite.isFalling):
             tektite.fall()
         
-        print(tektite.topY, tektite.centerY)
-        
-        if (tektite.isCollisionX(app, 1) and tektite.isCollisionX(app, -1)
-            and tektite.isCollisionY(app, -1)):
-            tektite.topY -= 10
         
         if (tektite.leftX < -64 or tektite.leftX > 928 or tektite.topY > 400):
             app.tektites.remove(tektite)
@@ -216,7 +213,7 @@ def drawLink(app):
 def drawEnemies(app):
     for tektite in app.tektites:
         drawImage(CMUImage(tektite.image), tektite.leftX, tektite.topY)
-        drawRect(tektite.leftX, tektite.topY, tektite.width, tektite.height, fill=None, border='black')
+        #drawRect(tektite.leftX, tektite.topY, tektite.width, tektite.height, fill=None, border='black')
     
     for stalfo in app.stalfos:
         drawImage(CMUImage(stalfo.image), stalfo.stalfoLeftX, stalfo.stalfoTopY)

@@ -245,12 +245,12 @@ class Tektite:
             if (dx > 0 and self.leftX < left and self.leftX + self.width + 1 > left
                 and abs(blockCenterY - self.centerY) < self.height):
                 self.leftX = left - self.width
-                self.centerX = left - (self.width)/2
+                self.centerX = self.leftX + self.width/2
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.height):
-                self.leftX = left + self.width
-                self.centerX = left + (self.width)/2
+                self.leftX = left + width
+                self.centerX = self.leftX + self.width/2
                 return True
         return False
     
