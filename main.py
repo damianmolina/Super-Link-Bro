@@ -34,6 +34,7 @@ def onAppStart(app):
 
     # Collision blocks
     app.collisionBlocks, app.itemBlocks, app.mapAs2DList = getRandomWorld(app)
+    app.allBlocks = app.collisionBlocks + app.itemBlocks
 
     # Create Link object
     app.link = Link(app)
@@ -65,6 +66,10 @@ def onAppStart(app):
     app.ground = app.ground.crop((0, 1550, 2880, 1800))
     app.ground = app.ground.resize((app.ground.width//3, app.ground.height//3))
 
+    # From https://www.pixilart.com/art/mario-block-pixel-79dace9a1d2f29a
+    app.itemBlock = Image.open('Images/ItemBlock.png')
+    app.itemBlock = app.itemBlock.resize((32, 32))
+
     app.changeInBackground = 0
 
     app.timer = 0
@@ -79,7 +84,7 @@ def redrawAll(app):
 
     drawImage(CMUImage(app.ground), 0, 400)
 
-    # Draw all of the collision blocks
+    # Draw all of the blocks
     drawBlocks(app)
 
     drawArrows(app)
@@ -106,7 +111,8 @@ def drawBlocks(app):
         drawImage(CMUImage(app.brick), left, top)
     
     for left, top, width, height in app.itemBlocks:
-        drawRect(left, top, width, height)
+        drawImage(CMUImage(app.itemBlock), left, top)
+
 
 # Controls movements of Link
 def onKeyPress(app, key):
@@ -130,6 +136,7 @@ def onKeyRelease(app, key):
         app.moveLeft = False
 
 def onStep(app):
+    app.allBlocks = app.collisionBlocks + app.itemBlocks
     app.timer += 1
     if (app.timer % 32 == 0): 
         app.switchTimer = not app.switchTimer
@@ -168,7 +175,7 @@ def onStep(app):
   
     if (app.switchTimer):
         for tektite in app.tektites:
-            if (app.prob > 0.5):
+            if (app.prob > 0.3):
                 tektite.moveTowardLink(app, tektite.moveSpeed)
             else:
                 tektite.moveAwayFromLink(app, tektite.moveSpeed)

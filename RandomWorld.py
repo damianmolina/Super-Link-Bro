@@ -97,14 +97,14 @@ def getBlocks(prevCol):
                 result.append(1)
 
     itemBlockPos = len(result) + random.randint(2, 3)
-    if (prevCol != None and prob > 0.9):
+    if (prevCol != None and prob > 0.95):
         if (itemBlockPos < len(prevCol) 
             and not prevCol[itemBlockPos] in {1, 2}
             and not prevCol[itemBlockPos - 1] == 2):
-            for i in range(itemBlockPos - len(result)):
+            for _ in range(itemBlockPos - len(result)):
                 result.append(0)
             result.append(2)
-    elif (prob > 0.9):
+    elif (prob > 0.95):
         for i in range(itemBlockPos - len(result)):
             result.append(0)
         result.append(2)
@@ -175,6 +175,7 @@ def generateNewWorld(app):
                 items.append(getCell(app, row, col))
     app.collisionBlocks = floor
     app.itemBlocks = items
+    app.allBlocks = app.collisionBlocks + app.itemBlocks
 
 def moveEverything(app, dx, dy):
     for i in range(len(app.collisionBlocks)):
@@ -186,6 +187,7 @@ def moveEverything(app, dx, dy):
         left, top, width, height = app.itemBlocks[i]
         newLeft, newTop = left + dx, top + dy
         app.itemBlocks[i] = (newLeft, newTop, width, height)
+
 
     for tektite in app.tektites:
         tektite.leftX += dx

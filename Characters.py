@@ -71,7 +71,7 @@ class Link:
     # Checks for any horizontal collisions
     def isCollisionX(self, app, dx):
         # Goes through each block
-        for left, top, width, height in app.collisionBlocks:
+        for left, top, width, height in app.allBlocks:
             blockCenterY = top + height/2
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
@@ -86,10 +86,11 @@ class Link:
                 app.changeInBackground += self.leftX - (left + width)
                 return True
         return False
+        
 
     # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
-        for left, top, width, height in app.collisionBlocks:
+        for left, top, width, height in app.allBlocks:
             blockCenterX = left + width/2
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
@@ -142,7 +143,7 @@ class Link:
         if (self.topY + self.linkHeight + 1 > app.lowestFloor): 
             self.isOnGround = True
         else:
-            for left, top, width, height in app.collisionBlocks:
+            for left, top, width, height in app.allBlocks:
                 if (self.topY + self.linkHeight + 1 > top and left < self.centerX < left + width):
                     self.isOnGround = True
             self.isOnGround = False
@@ -222,7 +223,7 @@ class Tektite:
         if (self.topY + self.height + 1 > app.lowestFloor): 
             self.isOnGround = True
         else:
-            for left, top, width, height in app.collisionBlocks:
+            for left, top, width, height in app.allBlocks:
                 if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
                     self.isOnGround = True
             self.isOnGround = False
@@ -240,7 +241,7 @@ class Tektite:
 
     def isCollisionX(self, app, dx):
         # Goes through each block
-        for left, top, width, height in app.collisionBlocks:
+        for left, top, width, height in app.allBlocks:
             blockCenterY = top + height/2
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
@@ -257,7 +258,7 @@ class Tektite:
         return False
     
     def isCollisionY(self, app, dy):
-        for left, top, width, height in app.collisionBlocks:
+        for left, top, width, height in app.allBlocks:
             blockCenterX = left + width/2
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
