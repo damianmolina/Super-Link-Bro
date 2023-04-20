@@ -41,7 +41,7 @@ class Link:
         self.isFalling = True
 
         # Link's movement speed
-        self.moveSpeed = 10
+        self.moveSpeed = 8
 
 
     def move(self, app, dx, dy):
@@ -55,15 +55,15 @@ class Link:
         if (dx > 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
             app.changeInBackground -= dx
-            self.offsetWeapons(app, dx)
-            self.offsetEnemies(app, dx)
+            #self.offsetWeapons(app, dx)
+            #self.offsetEnemies(app, 8)
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
             app.changeInBackground -= dx
-            self.offsetWeapons(app, dx)
-            self.offsetEnemies(app, dx)
+            #self.offsetWeapons(app, dx)
+            #self.offsetEnemies(app, -8)
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
@@ -83,15 +83,15 @@ class Link:
                 and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
                 app.changeInBackground -= (left - (self.leftX + self.linkWidth))
-                self.offsetWeapons(app, dx)
-                self.offsetEnemies(app, dx)
+                # self.offsetWeapons(app, dx)
+                # self.offsetEnemies(app, dx)
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, self.leftX - (left + width), 0)
                 app.changeInBackground += self.leftX - (left + width)
-                self.offsetWeapons(app, dx)
-                self.offsetEnemies(app, dx)
+                # self.offsetWeapons(app, dx)
+                # self.offsetEnemies(app, dx)
                 return True
         return False
 
@@ -268,7 +268,7 @@ class Tektite:
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.height):
-                self.leftX = left + width
+                self.leftX = left + self.width
                 self.centerX = left + self.width
                 return True
         return False
@@ -303,13 +303,13 @@ class Tektite:
                 return True
         return False
 
-    def offset(self, app, dx):
-        if (dx > 0 and not self.isCollisionX(app, -dx)):
-            self.leftX -= dx
-            self.centerX -= dx
-        elif (dx < 0 and not self.isCollisionX(app, -dx)):
-            self.leftX -= dx
-            self.centerX -= dx
+    # def offset(self, app, dx):
+    #     if (dx > 0 and not self.isCollisionX(app, -dx)):
+    #         self.leftX -= dx
+    #         self.centerX -= dx
+    #     elif (dx < 0 and not self.isCollisionX(app, -dx)):
+    #         self.leftX -= dx
+    #         self.centerX -= dx
 
 
     def __eq__(self, other):

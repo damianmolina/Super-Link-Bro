@@ -186,3 +186,7 @@ def moveBlocks(app, dx, dy):
         left, top, width, height = app.itemBlocks[i]
         newLeft, newTop = left + dx, top + dy
         app.itemBlocks[i] = (newLeft, newTop, width, height)
+
+    for tektite in app.tektites:
+        tektite.leftX += dx
+        tektite.centerX += dx

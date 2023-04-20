@@ -220,10 +220,10 @@ def drawEnemies(app):
         drawImage(CMUImage(stalfo.image), stalfo.stalfoLeftX, stalfo.stalfoTopY)
 
 def generateWorld(app):
-    if (app.changeInBackground < -32):
+    if (app.changeInBackground == -32):
         generateRightCol(app)
         app.changeInBackground = 0
-    elif (app.changeInBackground > 32):
+    elif (app.changeInBackground == 32):
         generateLeftCol(app)
         app.changeInBackground = 0
 
