@@ -28,6 +28,8 @@ class Arrow:
 
 
         self.hasCollided = False
+
+        self.damage = 1
     
     def shoot(self):
         # Moves arrow in the direction that Link was facing 
@@ -52,6 +54,19 @@ class Arrow:
                   and abs(blockCenterY - self.arrowCenterY) < self.arrowHeight):
                 self.hasCollided = True
                 return True
+        
+        for tektite in app.tektites:
+            if (dx > 0 and self.arrowLeftX < tektite.leftX and self.arrowLeftX + self.arrowWidth + 1 > tektite.leftX
+                and abs(tektite.centerY - self.arrowCenterY) < self.arrowHeight):
+                self.hasCollided = True
+                tektite.health -= self.damage
+                return True
+            elif (dx < 0 and self.arrowLeftX > tektite.leftX and self.arrowLeftX - 1 < tektite.leftX + tektite.width 
+                  and abs(tektite.centerY - self.arrowCenterY) < self.arrowHeight):
+                self.hasCollided = True
+                tektite.health -= self.damage
+                return True
+
         return False
     
         
@@ -92,6 +107,7 @@ class Bomb:
         # Initially has not collided with anything
         self.hasCollided = False
 
+        self.damage = 2
 
     # Bombs are equal to each other when they're at the same location
     def __eq__(self, other):
@@ -120,6 +136,18 @@ class Bomb:
 
     # Checks for any horizontal collisions
     def isCollisionX(self, app, dx):
+        for tektite in app.tektites:
+            if (dx > 0 and self.bombLeftX < tektite.leftX and self.bombLeftX + self.bombWidth + 5 > tektite.leftX
+                and abs(tektite.centerY - self.bombCenterY) < self.bombHeight):
+                self.hasCollided = True
+                tektite.health -= self.damage
+                return True
+            elif (dx < 0 and self.bombLeftX > tektite.leftX and self.bombLeftX - 5 < tektite.leftX + tektite.width 
+                  and abs(tektite.centerY - self.bombCenterY) < self.bombHeight):
+                self.hasCollided = True
+                tektite.health -= self.damage
+                return True
+        
          # Goes through each block
         for left, top, width, height in app.collisionBlocks:
             blockCenterY = top + height/2
@@ -133,10 +161,25 @@ class Bomb:
                   and abs(blockCenterY - self.bombCenterY) < self.bombHeight):
                 self.hasCollided = True
                 return True
+            
         return False
 
     # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
+        for tektite in app.tektites:
+            # Checks direction of movement, whether it will collide and whether Link's center
+            # is in the right spot for a collision to occur
+            if (dy > 0 and self.bombTopY < tektite.topY and self.bombTopY + self.bombHeight + 5 > tektite.topY 
+                and abs(tektite.centerX - self.bombCenterX) < self.bombWidth - 5):
+                self.hasCollided = True
+                tektite.health -= self.damage
+                return True
+            elif (dy < 0 and self.bombTopY > tektite.topY  + tektite.height and self.bombTopY + 5 < tektite.topY + tektite.height 
+                  and abs(tektite.centerX - self.bombCenterX) < self.bombWidth - 5):
+                self.hasCollided = True
+                tektite.health -= self.damage
+                return True
+            
         for left, top, width, height in app.collisionBlocks:
             blockCenterX = left + width/2
             # Checks direction of movement, whether it will collide and whether Link's center
@@ -150,4 +193,5 @@ class Bomb:
                   and abs(blockCenterX - self.bombCenterX) < self.bombWidth - 5):
                 self.hasCollided = True
                 return True
+        
         return False

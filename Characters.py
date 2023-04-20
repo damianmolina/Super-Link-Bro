@@ -183,6 +183,8 @@ class Tektite:
         self.originalVelocity = -25
         self.currVelocity = -25
         self.gravity = 1
+
+        self.health = 2
     
     def moveTowardLink(self, app, dx):
         self.checkGround()

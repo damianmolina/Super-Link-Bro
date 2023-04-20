@@ -173,7 +173,6 @@ def onStep(app):
             else:
                 tektite.moveAwayFromLink(app, tektite.moveSpeed)
 
-            print(tektite.leftX, tektite.centerX)
             prob = random.random()
             if (prob > 0.98):
                 tektite.isJumping = True
@@ -188,6 +187,9 @@ def onStep(app):
         
         
         if (tektite.leftX < -64 or tektite.leftX > 928 or tektite.topY > 400):
+            app.tektites.remove(tektite)
+        
+        if (tektite.health == 0):
             app.tektites.remove(tektite)
     
     generateWorld(app)
