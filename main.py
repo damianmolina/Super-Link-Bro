@@ -67,6 +67,10 @@ def onAppStart(app):
 
     app.changeInBackground = 0
 
+    app.timer = 0
+    app.switchTimer = True
+    app.prob = random.random()
+
     
 
 def redrawAll(app):
@@ -126,6 +130,10 @@ def onKeyRelease(app, key):
         app.moveLeft = False
 
 def onStep(app):
+    app.timer += 1
+    if (app.timer % 32 == 0): 
+        app.switchTimer = not app.switchTimer
+
     if (app.moveRight):
         app.link.move(app, app.link.moveSpeed, 0)
 
@@ -157,8 +165,32 @@ def onStep(app):
         if (prob > 0.9):
             if (prob > 0.95):
                 app.tektites.append(Tektite(app))
+  
+    if (app.switchTimer):
+        for tektite in app.tektites:
+            if (app.prob > 0.5):
+                tektite.moveTowardLink(app, tektite.moveSpeed)
             else:
-                app.stalfos.append(Stalfo(app))
+                tektite.moveAwayFromLink(app, tektite.moveSpeed)
+
+            if (app.prob > 0.7):
+                tektite.isJumping = True
+    else:
+        app.prob = random.random()
+    
+    for tektite in app.tektites:
+        if (tektite.isJumping):
+            tektite.jump()
+        if (tektite.isFalling):
+            tektite.fall()
+        
+        if (tektite.isCollisionX(app, 1) and tektite.isCollisionX(app, -1)
+            and tektite.isCollisionY(app, -1)):
+            tektite.topY -= 10
+        
+        if (tektite.leftX < -64 or tektite.leftX > 928 or tektite.topY > 400):
+            app.tektites.remove(tektite)
+    
     generateWorld(app)
     
 
@@ -181,7 +213,8 @@ def drawLink(app):
 
 def drawEnemies(app):
     for tektite in app.tektites:
-        drawImage(CMUImage(tektite.image), tektite.tektiteLeftX, tektite.tektiteTopY)
+        drawImage(CMUImage(tektite.image), tektite.leftX, tektite.topY)
+        drawRect(tektite.leftX, tektite.topY, tektite.width, tektite.height, fill=None, border='black')
     
     for stalfo in app.stalfos:
         drawImage(CMUImage(stalfo.image), stalfo.stalfoLeftX, stalfo.stalfoTopY)

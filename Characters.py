@@ -56,12 +56,14 @@ class Link:
             moveBlocks(app, -dx, dy)
             app.changeInBackground -= dx
             self.offsetWeapons(app, dx)
+            self.offsetEnemies(app, dx)
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
             moveBlocks(app, -dx, dy)
             app.changeInBackground -= dx
             self.offsetWeapons(app, dx)
+            self.offsetEnemies(app, dx)
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
@@ -81,11 +83,15 @@ class Link:
                 and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
                 app.changeInBackground -= (left - (self.leftX + self.linkWidth))
+                self.offsetWeapons(app, dx)
+                self.offsetEnemies(app, dx)
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.linkHeight):
                 moveBlocks(app, self.leftX - (left + width), 0)
                 app.changeInBackground += self.leftX - (left + width)
+                self.offsetWeapons(app, dx)
+                self.offsetEnemies(app, dx)
                 return True
         return False
 
@@ -164,20 +170,155 @@ class Link:
         
         for bomb in app.bombs:
             bomb.offset(app, dx)
+    
+    def offsetEnemies(self, app, dx):
+        for tektite in app.tektites:
+            tektite.offset(app, dx)
+        
 
 class Tektite:
+
     def __init__(self, app):
-        # From https://www.pixilart.com/art/tektite-sprite-3dae6d7691bf058
+        # From https://displate.com/displate/1407487
         tektite = Image.open('Images/Tektite.png')
         tektite = tektite.resize((32, 32))
         self.image = tektite
         probOfSide = random.random()
         if (probOfSide > 0.5):
-            self.tektiteLeftX = 928
+            self.leftX = 928
         else:
-            self.tektiteLeftX = -64
+            self.leftX = -64
         
-        self.tektiteTopY = 0
+        self.topY = 0
+        self.width = self.height = 32
+        self.centerX = self.leftX + (self.width)/2
+        self.centerY = self.topY + (self.height)/2
+
+        self.isJumping = False
+        self.isOnGround = False
+        self.isFalling = True
+        self.moveSpeed = 5
+
+        self.originalVelocity = -25
+        self.currVelocity = -25
+        self.gravity = 1
+    
+    def moveTowardLink(self, app, dx):
+        self.checkGround()
+        if (self.leftX > app.link.leftX and not self.isCollisionX(app, -dx)):
+            self.leftX -= dx
+            self.centerX -= dx
+        elif (not self.isCollisionX(app, dx)):
+            self.leftX += dx
+            self.centerX += dx
+
+    def moveAwayFromLink(self, app, dx):
+        self.checkGround()
+        if (self.leftX > app.link.leftX and not self.isCollisionX(app, dx)):
+            self.leftX += dx
+            self.centerX += dx
+        elif (not self.isCollisionX(app, -dx)):
+            self.leftX -= dx
+            self.centerX -= dx
+    
+       # Causes Link to jump
+    def jump(self):
+        self.isFalling = False
+        if (not self.isCollisionY(app, self.currVelocity + self.gravity)):
+            self.topY += self.currVelocity + self.gravity
+            self.centerY += self.currVelocity + self.gravity
+
+        if (self.currVelocity >= 0):
+            self.isFalling = True
+            self.isJumping = False
+        else:
+            self.currVelocity += 2
+
+    # Checking whether Link is on a ground
+    def checkGround(self):
+        if (self.topY + self.height + 1 > app.lowestFloor): 
+            self.isOnGround = True
+        else:
+            for left, top, width, height in app.collisionBlocks:
+                if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
+                    self.isOnGround = True
+            self.isOnGround = False
+    
+    # Falling movement
+    def fall(self):
+        if (not self.isCollisionY(app, self.gravity)):
+            self.topY += self.gravity
+            self.centerY += self.gravity
+        if (self.isOnGround):
+            self.gravity = 1
+            self.currVelocity = self.originalVelocity
+        else:
+            self.gravity += 2
+
+    def isCollisionX(self, app, dx):
+        # Goes through each block
+        for left, top, width, height in app.collisionBlocks:
+            blockCenterY = top + height/2
+            # Checks direction of movement, whether it will collide and whether Link's center
+            # is in the right spot for a collision to occur
+            if (dx > 0 and self.leftX < left and self.leftX + self.width + 1 > left
+                and abs(blockCenterY - self.centerY) < self.height):
+                self.leftX = left - self.width
+                self.centerX = left - self.width
+                return True
+            elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
+                  and abs(blockCenterY - self.centerY) < self.height):
+                self.leftX = left + width
+                self.centerX = left + self.width
+                return True
+        return False
+    
+    def isCollisionY(self, app, dy):
+        for left, top, width, height in app.collisionBlocks:
+            blockCenterX = left + width/2
+            # Checks direction of movement, whether it will collide and whether Link's center
+            # is in the right spot for a collision to occur
+            if (dy > 0 and self.topY < top and self.topY + self.height + dy > top 
+                and abs(blockCenterX - self.centerX) < self.width - 10
+                or (self.topY + self.height + dy > app.lowestFloor and self.isFalling)):
+                # An if-statement to determine whether Link is colliding with floor
+                # or with a block
+                if (self.topY + self.height + dy > app.lowestFloor):
+                    self.topY = app.lowestFloor - self.height
+                    self.centerY = app.lowestFloor - (self.height)/2
+                else:
+                    self.topY = top - self.height
+                    self.centerY = top - (self.height)/2
+                # Link has to be standing on a ground
+                self.isOnGround = True
+                return True
+            elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height 
+                  and abs(blockCenterX - self.centerX) < self.width - 1 and self.isJumping):
+                self.topY = top + height
+                self.centerY = top + height + (self.height)/2
+                # "Hitting" his head means that Link is no longer jumping but 
+                # is instead falling
+                self.isJumping = False
+                self.isFalling = True
+                return True
+        return False
+
+    def offset(self, app, dx):
+        if (dx > 0 and not self.isCollisionX(app, -dx)):
+            self.leftX -= dx
+            self.centerX -= dx
+        elif (dx < 0 and not self.isCollisionX(app, -dx)):
+            self.leftX -= dx
+            self.centerX -= dx
+
+
+    def __eq__(self, other):
+        if (not isinstance(other, Tektite)): return False
+
+        if (self.leftX == other.leftX and self.topY == other.topY):
+            return True
+        else:
+            return False
     
 
 class Stalfo:
