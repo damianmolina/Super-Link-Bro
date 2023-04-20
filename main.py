@@ -160,7 +160,7 @@ def onStep(app):
             app.bombs[0].move(app)
 
     totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
-    if (totalNumOfEnemies < 4):
+    if (totalNumOfEnemies < 1):
         prob = random.random()
         if (prob > 0.9):
             if (prob > 0.95):
@@ -183,6 +183,8 @@ def onStep(app):
             tektite.jump()
         if (tektite.isFalling):
             tektite.fall()
+        
+        print(tektite.topY, tektite.centerY)
         
         if (tektite.isCollisionX(app, 1) and tektite.isCollisionX(app, -1)
             and tektite.isCollisionY(app, -1)):

@@ -53,17 +53,13 @@ class Link:
 
         # Check if moving right and not colliding
         if (dx > 0 and not self.isCollisionX(app, dx)):
-            moveBlocks(app, -dx, dy)
+            moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
-            #self.offsetWeapons(app, dx)
-            #self.offsetEnemies(app, 8)
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
-            moveBlocks(app, -dx, dy)
+            moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
-            #self.offsetWeapons(app, dx)
-            #self.offsetEnemies(app, -8)
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
@@ -81,17 +77,13 @@ class Link:
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + 1 > left
                 and abs(blockCenterY - self.centerY) < self.linkHeight):
-                moveBlocks(app, -(left - (self.leftX + self.linkWidth)), 0)
+                moveEverything(app, -(left - (self.leftX + self.linkWidth)), 0)
                 app.changeInBackground -= (left - (self.leftX + self.linkWidth))
-                # self.offsetWeapons(app, dx)
-                # self.offsetEnemies(app, dx)
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.linkHeight):
-                moveBlocks(app, self.leftX - (left + width), 0)
+                moveEverything(app, self.leftX - (left + width), 0)
                 app.changeInBackground += self.leftX - (left + width)
-                # self.offsetWeapons(app, dx)
-                # self.offsetEnemies(app, dx)
                 return True
         return False
 
@@ -163,17 +155,6 @@ class Link:
             Link.currVelocity = Link.originalVelocity
         else:
             Link.gravity += 2
-    
-    def offsetWeapons(self, app, dx):
-        for arrow in app.arrows:
-            arrow.offset(app, dx)
-        
-        for bomb in app.bombs:
-            bomb.offset(app, dx)
-    
-    def offsetEnemies(self, app, dx):
-        for tektite in app.tektites:
-            tektite.offset(app, dx)
         
 
 class Tektite:
@@ -264,12 +245,12 @@ class Tektite:
             if (dx > 0 and self.leftX < left and self.leftX + self.width + 1 > left
                 and abs(blockCenterY - self.centerY) < self.height):
                 self.leftX = left - self.width
-                self.centerX = left - self.width
+                self.centerX = left - (self.width)/2
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
                   and abs(blockCenterY - self.centerY) < self.height):
                 self.leftX = left + self.width
-                self.centerX = left + self.width
+                self.centerX = left + (self.width)/2
                 return True
         return False
     
@@ -302,14 +283,6 @@ class Tektite:
                 self.isFalling = True
                 return True
         return False
-
-    # def offset(self, app, dx):
-    #     if (dx > 0 and not self.isCollisionX(app, -dx)):
-    #         self.leftX -= dx
-    #         self.centerX -= dx
-    #     elif (dx < 0 and not self.isCollisionX(app, -dx)):
-    #         self.leftX -= dx
-    #         self.centerX -= dx
 
 
     def __eq__(self, other):

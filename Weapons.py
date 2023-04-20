@@ -63,11 +63,6 @@ class Arrow:
         else:
             return False
         
-    def offset(self, app, dx):
-        if (dx > 0):
-            self.arrowLeftX -= dx
-        else:
-            self.arrowLeftX -= dx
     
 class Bomb:
     velocityY = -10 
@@ -156,9 +151,3 @@ class Bomb:
                 self.hasCollided = True
                 return True
         return False
-    
-    def offset(self, app, dx):
-        if (dx > 0):
-            self.bombLeftX -= dx
-        else:
-            self.bombLeftX -= dx

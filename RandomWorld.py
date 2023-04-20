@@ -176,7 +176,7 @@ def generateNewWorld(app):
     app.collisionBlocks = floor
     app.itemBlocks = items
 
-def moveBlocks(app, dx, dy):
+def moveEverything(app, dx, dy):
     for i in range(len(app.collisionBlocks)):
         left, top, width, height = app.collisionBlocks[i]
         newLeft, newTop = left + dx, top + dy
@@ -190,3 +190,11 @@ def moveBlocks(app, dx, dy):
     for tektite in app.tektites:
         tektite.leftX += dx
         tektite.centerX += dx
+    
+    for arrow in app.arrows:
+        arrow.arrowLeftX += dx
+        arrow.arrowCenterX += dx
+
+    for bomb in app.bombs:
+        bomb.bombLeftX += dx
+        bomb.bombCenterX += dx
