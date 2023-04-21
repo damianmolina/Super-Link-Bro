@@ -213,9 +213,9 @@ def drawBombs(app):
         drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)
 
 def drawLink(app):
-    # # Draws Link's boundary box
-    # drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
-    #          app.link.linkHeight, fill = None, border = 'black', borderWidth = 2)
+    # Draws Link's boundary box
+    drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
+             app.link.linkHeight, fill = None, border = 'black', borderWidth = 2)
     
     # Draws Link
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)

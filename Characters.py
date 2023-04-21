@@ -77,13 +77,13 @@ class Link:
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + 1 > left
-                and abs(blockCenterY - self.centerY) < self.linkHeight - 5):
+                and abs(blockCenterY - self.centerY) < self.linkHeight - 6):
                 moveEverything(app, -(left - (self.leftX + self.linkWidth)), 0)
                 app.changeInBackground -= (left - (self.leftX + self.linkWidth))
                 self.checkGround()
                 return True
-            if (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
-                  and abs(blockCenterY - self.centerY) < self.linkHeight - 5):
+            elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
+                  and abs(blockCenterY - self.centerY) < self.linkHeight - 6):
                 moveEverything(app, self.leftX - (left + width), 0)
                 app.changeInBackground += self.leftX - (left + width)
                 self.checkGround()
@@ -111,7 +111,7 @@ class Link:
                 # Link has to be standing on a ground
                 self.isOnGround = True
                 return True
-            elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height 
+            elif (dy < 0 and self.topY > top + height and self.topY - 10 < top + height 
                   and abs(blockCenterX - self.centerX) < self.linkWidth - 5 and self.isJumping):
                 self.topY = (top + height)
                 self.centerY = top + height + (self.linkHeight)/2
