@@ -76,6 +76,9 @@ def onAppStart(app):
     app.switchTimer = True
     app.prob = random.random()
 
+    app.itemBlockCollision = None
+    app.item = None
+
     
 
 def redrawAll(app):
@@ -94,6 +97,9 @@ def redrawAll(app):
     drawLink(app)
 
     drawEnemies(app)
+
+    if (app.item != None):
+        drawItem(app)
 
     # Draws pointer for (x,y) of mouse
     drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
@@ -205,12 +211,12 @@ def onStep(app):
 
 def drawArrows(app):
     for arrow in app.arrows:
-        drawImage(CMUImage(arrow.image), arrow.arrowLeftX, arrow.arrowTopY)
+        drawImage(CMUImage(arrow.image), arrow.leftX, arrow.topY)
 
 def drawBombs(app):
     if (len(app.bombs) > 0):
         bomb = app.bombs[0]
-        drawImage(CMUImage(bomb.image), bomb.bombLeftX, bomb.bombTopY)
+        drawImage(CMUImage(bomb.image), bomb.leftX, bomb.topY)
 
 def drawLink(app):
     # Draws Link's boundary box
@@ -227,6 +233,10 @@ def drawEnemies(app):
     
     for stalfo in app.stalfos:
         drawImage(CMUImage(stalfo.image), stalfo.stalfoLeftX, stalfo.stalfoTopY)
+
+def drawItem(app):
+    left, top, _, _ = app.itemBlock
+    drawImage(CMUImage(app.item), left, top + app.item.height)
 
 
 def generateWorld(app):

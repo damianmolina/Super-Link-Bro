@@ -194,9 +194,9 @@ def moveEverything(app, dx, dy):
         tektite.centerX += dx
     
     for arrow in app.arrows:
-        arrow.arrowLeftX += dx
-        arrow.arrowCenterX += dx
+        arrow.leftX += dx
+        arrow.centerX += dx
 
     for bomb in app.bombs:
-        bomb.bombLeftX += dx
-        bomb.bombCenterX += dx
+        bomb.leftX += dx
+        bomb.centerX += dx
