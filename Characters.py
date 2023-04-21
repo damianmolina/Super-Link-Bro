@@ -51,6 +51,7 @@ class Link:
         # Checks if Link is actually standing on top of something
         self.checkGround()
 
+
         # Check if moving right and not colliding
         if (dx > 0 and not self.isCollisionX(app, dx)):
             moveEverything(app, -dx, dy)
@@ -76,14 +77,16 @@ class Link:
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + 1 > left
-                and abs(blockCenterY - self.centerY) < self.linkHeight):
+                and abs(blockCenterY - self.centerY) < self.linkHeight - 5):
                 moveEverything(app, -(left - (self.leftX + self.linkWidth)), 0)
                 app.changeInBackground -= (left - (self.leftX + self.linkWidth))
+                self.checkGround()
                 return True
-            elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
-                  and abs(blockCenterY - self.centerY) < self.linkHeight):
+            if (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
+                  and abs(blockCenterY - self.centerY) < self.linkHeight - 5):
                 moveEverything(app, self.leftX - (left + width), 0)
                 app.changeInBackground += self.leftX - (left + width)
+                self.checkGround()
                 return True
         return False
         
@@ -110,7 +113,7 @@ class Link:
                 return True
             elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height 
                   and abs(blockCenterX - self.centerX) < self.linkWidth - 5 and self.isJumping):
-                self.topY = top + height
+                self.topY = (top + height)
                 self.centerY = top + height + (self.linkHeight)/2
                 # "Hitting" his head means that Link is no longer jumping but 
                 # is instead falling
