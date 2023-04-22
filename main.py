@@ -8,6 +8,7 @@ import random
 
 
 def onAppStart(app):
+    # Restart the game once Link has lost all of his health
     restartApp(app)
 
 def restartApp(app):
@@ -15,11 +16,6 @@ def restartApp(app):
     app.width = 896
     app.height = 448
     app.stepsPerSecond = 15
-
-
-    # Attributes to track where the mouse is
-    app.labelX = 0
-    app.labelY = 0
 
     # Tells whether Link is moving right or left
     app.moveRight = False
@@ -39,10 +35,15 @@ def restartApp(app):
 
     # Collision blocks
     app.collisionBlocks, app.itemBlocks, app.mapAs2DList = getRandomWorld(app)
+
+    # All blocks
     app.allBlocks = app.collisionBlocks + app.itemBlocks
 
     # Create Link object
     app.link = Link(app)
+    
+    # Link has five hearts
+    app.lives = app.link.health
 
     # Arrows
     app.arrows = list()
@@ -75,49 +76,52 @@ def restartApp(app):
     app.itemBlock = Image.open('Images/ItemBlock.png')
     app.itemBlock = app.itemBlock.resize((32, 32))
 
+
+    # This attribute will help determine when the background should change
     app.changeInBackground = 0
 
+    # Timer for moving/jumping with enemies
     app.timer = 0
+
+    # Timer to create a buffer for how often Link is attacked
     app.checkEnemyTimer = 0
+
+    # Alternates to not make the enemies move constantly
     app.switchTimer = True
+
+    # Probability for enemies to spawn
     app.prob = random.random()
 
     # Items that show up from item blocks
     app.items = list()
 
-    app.gameOver = False
 
 
 def redrawAll(app):
     # Draws the background
     drawImage(CMUImage(app.clouds), 0, 0)
-
     drawImage(CMUImage(app.ground), 0, 400)
 
-    # Draw all of the blocks
+    # Draws all of the blocks
     drawBlocks(app)
 
+    # Draws the arrows
     drawArrows(app)
 
+    # Draws the bombs
     drawBombs(app)   
 
+    # Draws Link
     drawLink(app)
 
+    # Draws the enemies
     drawEnemies(app)
 
+    # Draws the items that appear on top of item blocks
     drawItems(app)
 
-    # Draws pointer for (x,y) of mouse
-    drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
 
-
-
-# To help with knowing where the mouse is
-def onMouseMove(app, mouseX, mouseY):
-    app.labelX = mouseX
-    app.labelY = mouseY
-
-# Draws collision blocks from list of app.collisionBlocks
+# Draws all blocks
 def drawBlocks(app):
     for left, top, width, height in app.collisionBlocks:
         drawImage(CMUImage(app.brick), left, top)
@@ -135,13 +139,18 @@ def onKeyPress(app, key):
     elif (key == 'w' and app.link.isOnGround == True):
         app.link.isOnGround = False
         app.link.isJumping = True
+    # Shoot arrows with 'p'
     elif (key == 'p'):
         app.arrows.append(Arrow(app))
-    elif (key == 'o'):
-        for item in app.items:
-            if (item.item == 0 and not item.used):
-                app.bombs.append(Bomb(app))
-                item.used = True
+        if (app.link.lookingRight):
+            app.link.image = app.link.bowRight
+        else:
+            app.link.image = app.link.bowLeft
+    # Bomb can only be thrown if Link got it from an item block
+    elif (key == 'o' and app.link.hasBomb):
+        app.bombs.append(Bomb(app))
+        # Once thrown, Link no longer has a bomb
+        app.link.hasBomb = False
 
 # Makes sure to stop moving Link left or right
 def onKeyRelease(app, key):
@@ -149,17 +158,28 @@ def onKeyRelease(app, key):
         app.moveRight = False
     elif (key == 'a'):
         app.moveLeft = False
+    elif (key == 'p'):
+        if (app.link.lookingRight):
+            app.link.image = app.link.walkRight
+        else:
+            app.link.image = app.link.walkLeft
 
 def onStep(app):
+    # Constantly updates location of all blocks
     app.allBlocks = app.collisionBlocks + app.itemBlocks
+
     app.timer += 1
     app.checkEnemyTimer += 1
+
+    # If Link's health is <= 0, game is over --> restarts game
     if (app.link.health <= 0):
         restartApp(app)
 
+    # This is the buffer time for enemy movement
     if (app.timer % 32 == 0): 
         app.switchTimer = not app.switchTimer
 
+    # Following methods move Link based on key presses
     if (app.moveRight):
         app.link.move(app, app.link.moveSpeed, 0)
 
@@ -173,13 +193,16 @@ def onStep(app):
         app.link.fall()
     
 
+    # Cycles through arrows to see whether they've collided. If not, continues
+    # to move them 
     for arrow in app.arrows:
         if (arrow.hasCollided):
             app.arrows.remove(arrow)
         else:
             arrow.shoot()
 
-    
+    # Cycles through bombs to see whether they've collided. If not, continues
+    # to move them  
     if (len(app.bombs) > 0):
         if (app.bombs[0].hasCollided):
             app.bombs.pop()
@@ -187,25 +210,30 @@ def onStep(app):
             app.bombs[0].move(app)
 
     totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
+    # Will only spawn up to five enemies max
     if (totalNumOfEnemies < 4):
         prob = random.random()
-        if (prob > 0.9):
-            if (prob > 0.95):
-                app.tektites.append(Tektite(app))
+        if (prob > 0.95):
+            app.tektites.append(Tektite(app))
   
     if (app.switchTimer):
         for tektite in app.tektites:
+            # 70% chance of moving toward Link, 30% of moving away
             if (app.prob > 0.3):
                 tektite.moveTowardLink(app, tektite.moveSpeed)
             else:
                 tektite.moveAwayFromLink(app, tektite.moveSpeed)
 
             prob = random.random()
-            if (prob > 0.98):
+            # 10% chance of jumping
+            if (prob > 0.9):
                 tektite.isJumping = True
     else:
+        # Changes the probability attribute of app
         app.prob = random.random()
     
+    # Cycles through tektites to move them or delete them if their health <= 0
+    # or if they're out of bounds
     for tektite in app.tektites:
         if (tektite.isJumping):
             tektite.jump()
@@ -218,48 +246,45 @@ def onStep(app):
         if (tektite.health <= 0):
             app.tektites.remove(tektite)
 
+    # Deletes items if they are offscreen
     for item in app.items:
         if (item.leftX < -32 or item.leftX > 956):
             app.items.remove(item)
 
+    # 10 steps is the buffer time for Link to take damage
     if (app.checkEnemyTimer >= 10):
         checkEnemyCollisions(app)
+
     
-    
+    # Generates new terrain on either side of Link
     generateWorld(app)
     
-
+# Draws arrows
 def drawArrows(app):
     for arrow in app.arrows:
         drawImage(CMUImage(arrow.image), arrow.leftX, arrow.topY)
 
+# Draws bombs
 def drawBombs(app):
     if (len(app.bombs) > 0):
         bomb = app.bombs[0]
         drawImage(CMUImage(bomb.image), bomb.leftX, bomb.topY)
 
+# Draws Link
 def drawLink(app):
-    # Draws Link's boundary box
-    # drawRect(app.link.leftX, app.link.topY, app.link.width, 
-    #          app.link.height, fill = None, border = 'black', borderWidth = 2)
-    
-    # Draws Link
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
 
+# Draws enemies
 def drawEnemies(app):
     for tektite in app.tektites:
         drawImage(CMUImage(tektite.image), tektite.leftX, tektite.topY)
-        #drawRect(tektite.leftX, tektite.topY, tektite.width, tektite.height, fill=None, border='black')
-    
-    for stalfo in app.stalfos:
-        drawImage(CMUImage(stalfo.image), stalfo.stalfoLeftX, stalfo.stalfoTopY)
 
+# Draws items on top of item blocks
 def drawItems(app):
     for item in app.items:
         drawImage(CMUImage(item.image), item.leftX, item.topY)
 
-
-
+# Generates new terrain depending on how much the background has shifted
 def generateWorld(app):
     if (app.changeInBackground <= -32):
         generateRightCol(app)
@@ -268,6 +293,7 @@ def generateWorld(app):
         generateLeftCol(app)
         app.changeInBackground = 0
 
+# Checks to see if Link has collided with enemies
 def checkEnemyCollisions(app):
     for tektite in app.tektites:
         if (abs(app.link.centerX - tektite.centerX) < app.link.width and
@@ -279,7 +305,5 @@ def checkEnemyCollisions(app):
             app.link.health -= tektite.damage
             app.checkEnemyTimer = 0
 
-
-    
 # Runs game
 runApp(app.width, app.height)
