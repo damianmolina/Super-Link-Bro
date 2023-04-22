@@ -7,7 +7,25 @@ import random
 class Item:
     def __init__(self, app, itemBlock):
         left, top, width, height = itemBlock
-        self.item = random.randint(0,2)
+        prob = random.random()
+        if (app.link.moveSpeed == 16 and app.link.originalVelocity == -30):
+            self.item = 0
+        elif (app.link.moveSpeed == 16):
+            if (prob > 0.7):
+                self.item = 1
+            else:
+                self.item = 0
+        elif (app.link.originalVelocity == -30):
+            if (prob > 0.7):
+                self.item = 2
+            else:
+                self.item = 0
+        else:
+            if (prob > 0.7):
+                self.item = random.randint(1,2)
+            else:
+                self.item = 0
+
         if (self.item == 0):
             self.image = Image.open('Images/Bomb.png').resize((32, 32))
         elif (self.item == 1):

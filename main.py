@@ -89,9 +89,9 @@ def restartApp(app):
 
 def redrawAll(app):
     # Draws the background
-    drawImage(CMUImage(app.clouds), 0, 0)
+    #drawImage(CMUImage(app.clouds), 0, 0)
 
-    drawImage(CMUImage(app.ground), 0, 400)
+    #drawImage(CMUImage(app.ground), 0, 400)
 
     # Draw all of the blocks
     drawBlocks(app)
@@ -211,14 +211,14 @@ def onStep(app):
         if (tektite.isFalling):
             tektite.fall()
         
-        if (tektite.leftX < -64 or tektite.leftX > 928 or tektite.topY > 400):
+        if (tektite.leftX < -64 or tektite.leftX > 956 or tektite.topY > 400):
             app.tektites.remove(tektite)
         
         if (tektite.health <= 0):
             app.tektites.remove(tektite)
 
     for item in app.items:
-        if (item.leftX < -32 or item.leftX > 928):
+        if (item.leftX < -32 or item.leftX > 956):
             app.items.remove(item)
 
     if (app.checkEnemyTimer >= 10):
@@ -260,10 +260,10 @@ def drawItems(app):
 
 
 def generateWorld(app):
-    if (app.changeInBackground == -32):
+    if (app.changeInBackground <= -32):
         generateRightCol(app)
         app.changeInBackground = 0
-    elif (app.changeInBackground == 32):
+    elif (app.changeInBackground >= 32):
         generateLeftCol(app)
         app.changeInBackground = 0
 
