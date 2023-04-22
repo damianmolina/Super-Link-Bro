@@ -3,13 +3,17 @@ from PIL import Image
 from Characters import *
 from Weapons import *
 from RandomWorld import *
+from Items import *
 import random
 
 def onAppStart(app):
+    restartApp(app)
+
+def restartApp(app):
     # Screen width and height
     app.width = 896
     app.height = 448
-    app.stepsPerSecond = 15
+    app.stepsPerSecond = 10
 
 
     # Attributes to track where the mouse is
@@ -76,33 +80,36 @@ def onAppStart(app):
     app.switchTimer = True
     app.prob = random.random()
 
-    app.itemBlockCollision = None
-    app.item = None
+    # Items that show up from item blocks
+    app.items = list()
 
+    app.gameOver = False
     
 
 def redrawAll(app):
-    # Draws the background
-    drawImage(CMUImage(app.clouds), 0, 0)
+    if (not app.gameOver):
+        # Draws the background
+        drawImage(CMUImage(app.clouds), 0, 0)
 
-    drawImage(CMUImage(app.ground), 0, 400)
+        drawImage(CMUImage(app.ground), 0, 400)
 
-    # Draw all of the blocks
-    drawBlocks(app)
+        # Draw all of the blocks
+        drawBlocks(app)
 
-    drawArrows(app)
+        drawArrows(app)
 
-    drawBombs(app)   
+        drawBombs(app)   
 
-    drawLink(app)
+        drawLink(app)
 
-    drawEnemies(app)
+        drawEnemies(app)
 
-    if (app.item != None):
-        drawItem(app)
+        drawItems(app)
 
-    # Draws pointer for (x,y) of mouse
-    drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
+        # Draws pointer for (x,y) of mouse
+        drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
+    else:
+        drawEndScreen(app)
 
 
 
@@ -132,7 +139,10 @@ def onKeyPress(app, key):
     elif (key == 'p'):
         app.arrows.append(Arrow(app))
     elif (key == 'o'):
-        app.bombs.append(Bomb(app))
+        for item in app.items:
+            if (item.item == 0 and not item.used):
+                app.bombs.append(Bomb(app))
+                item.used = True
 
 # Makes sure to stop moving Link left or rightd.a
 def onKeyRelease(app, key):
@@ -159,6 +169,7 @@ def onStep(app):
     if (app.link.isFalling):
         app.link.fall()
     
+
     for arrow in app.arrows:
         if (arrow.hasCollided):
             app.arrows.remove(arrow)
@@ -198,12 +209,15 @@ def onStep(app):
         if (tektite.isFalling):
             tektite.fall()
         
-        
         if (tektite.leftX < -64 or tektite.leftX > 928 or tektite.topY > 400):
             app.tektites.remove(tektite)
         
         if (tektite.health == 0):
             app.tektites.remove(tektite)
+
+    for item in app.items:
+        if (item.leftX < -32 or item.leftX > 928):
+            app.items.remove(item)
     
     
     generateWorld(app)
@@ -220,8 +234,8 @@ def drawBombs(app):
 
 def drawLink(app):
     # Draws Link's boundary box
-    drawRect(app.link.leftX, app.link.topY, app.link.linkWidth, 
-             app.link.linkHeight, fill = None, border = 'black', borderWidth = 2)
+    drawRect(app.link.leftX, app.link.topY, app.link.width, 
+             app.link.height, fill = None, border = 'black', borderWidth = 2)
     
     # Draws Link
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
@@ -234,9 +248,10 @@ def drawEnemies(app):
     for stalfo in app.stalfos:
         drawImage(CMUImage(stalfo.image), stalfo.stalfoLeftX, stalfo.stalfoTopY)
 
-def drawItem(app):
-    left, top, _, _ = app.itemBlock
-    drawImage(CMUImage(app.item), left, top + app.item.height)
+def drawItems(app):
+    for item in app.items:
+        drawImage(CMUImage(item.image), item.leftX, item.topY)
+
 
 
 def generateWorld(app):
@@ -246,6 +261,9 @@ def generateWorld(app):
     elif (app.changeInBackground == 32):
         generateLeftCol(app)
         app.changeInBackground = 0
+
+
+
 
     
 # Runs game

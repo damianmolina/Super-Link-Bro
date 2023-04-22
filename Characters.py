@@ -1,6 +1,7 @@
 from cmu_graphics import *
 from PIL import Image
 from RandomWorld import *
+from Items import *
 import random
 
 class Link:
@@ -22,12 +23,12 @@ class Link:
         self.image = self.walk
 
         # The dimensions of Link's boundary box
-        self.linkWidth = 32
-        self.linkHeight = 32
-        self.leftX = app.width/2 - (self.linkWidth)/2
+        self.width = 32
+        self.height = 32
+        self.leftX = app.width/2 - (self.width)/2
         self.topY = 0
-        self.centerX = self.leftX + (self.linkWidth)/2
-        self.centerY = self.topY + (self.linkHeight)/2
+        self.centerX = self.leftX + (self.width)/2
+        self.centerY = self.topY + (self.height)/2
 
         # The direction that Link is looking
         self.lookingRight = True
@@ -76,14 +77,14 @@ class Link:
             blockCenterY = top + height/2
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
-            if (dx > 0 and self.leftX < left and self.leftX + self.linkWidth + 1 > left
-                and abs(blockCenterY - self.centerY) < self.linkHeight - 6):
-                moveEverything(app, -(left - (self.leftX + self.linkWidth)), 0)
-                app.changeInBackground -= (left - (self.leftX + self.linkWidth))
+            if (dx > 0 and self.leftX < left and self.leftX + self.width + 1 > left
+                and abs(blockCenterY - self.centerY) < self.height - 6):
+                moveEverything(app, -(left - (self.leftX + self.width)), 0)
+                app.changeInBackground -= (left - (self.leftX + self.width))
                 self.checkGround()
                 return True
             elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
-                  and abs(blockCenterY - self.centerY) < self.linkHeight - 6):
+                  and abs(blockCenterY - self.centerY) < self.height - 6):
                 moveEverything(app, self.leftX - (left + width), 0)
                 app.changeInBackground += self.leftX - (left + width)
                 self.checkGround()
@@ -93,34 +94,58 @@ class Link:
 
     # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
-        for left, top, width, height in app.allBlocks:
+        for left, top, width, height in app.collisionBlocks:
             blockCenterX = left + width/2
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
-            if (dy > 0 and self.topY < top and self.topY + self.linkHeight + dy > top 
-                and abs(blockCenterX - self.centerX) < self.linkWidth - 5
-                or (self.topY + self.linkHeight + dy > app.lowestFloor and self.isFalling)):
+            if (dy > 0 and self.topY < top and self.topY + self.height + dy > top 
+                and abs(blockCenterX - self.centerX) < self.width - 10
+                or (self.topY + self.height + dy > app.lowestFloor and self.isFalling)):
                 # An if-statement to determine whether Link is colliding with floor
                 # or with a block
-                if (self.topY + self.linkHeight + dy > app.lowestFloor):
-                    self.topY = app.lowestFloor - self.linkHeight
-                    self.centerY = app.lowestFloor - (self.linkHeight)/2
+                if (self.topY + self.height + dy > app.lowestFloor):
+                    self.topY = app.lowestFloor - self.height
+                    self.centerY = app.lowestFloor - (self.height)/2
                 else:
-                    self.topY = top - self.linkHeight
-                    self.centerY = top - (self.linkHeight)/2
+                    self.topY = top - self.height
+                    self.centerY = top - (self.height)/2
+                # Link has to be standing on a ground
+                self.isOnGround = True
+                return True
+        
+        for i in range(len(app.itemBlocks)):
+            left, top, width, height = app.itemBlocks[i]
+            blockCenterX = left + width/2
+            # Checks direction of movement, whether it will collide and whether Link's center
+            # is in the right spot for a collision to occur
+            if (dy > 0 and self.topY < top and self.topY + self.height + dy > top 
+                and abs(blockCenterX - self.centerX) < self.width - 10
+                or (self.topY + self.height + dy > app.lowestFloor and self.isFalling)):
+                # An if-statement to determine whether Link is colliding with floor
+                # or with a block
+                if (self.topY + self.height + dy > app.lowestFloor):
+                    self.topY = app.lowestFloor - self.height
+                    self.centerY = app.lowestFloor - (self.height)/2
+                else:
+                    self.topY = top - self.height
+                    self.centerY = top - (self.height)/2
                 # Link has to be standing on a ground
                 self.isOnGround = True
                 return True
             elif (dy < 0 and self.topY > top + height and self.topY - 10 < top + height 
-                  and abs(blockCenterX - self.centerX) < self.linkWidth - 5 and self.isJumping):
-                self.topY = (top + height)
-                self.centerY = top + height + (self.linkHeight)/2
+                  and abs(blockCenterX - self.centerX) < self.width and self.isJumping):
+                self.topY = top + height
+                self.centerY = top + height + (self.height)/2
                 # "Hitting" his head means that Link is no longer jumping but 
                 # is instead falling
                 self.isJumping = False
                 self.isFalling = True
+                app.items.append(Item(app, app.itemBlocks[i]))
+                
                 return True
         return False
+
+    
 
     # Flips Link's image if he's not looking in the correct direction
     def flip(self, dx):
@@ -143,11 +168,11 @@ class Link:
 
     # Checking whether Link is on a ground
     def checkGround(self):
-        if (self.topY + self.linkHeight + 1 > app.lowestFloor): 
+        if (self.topY + self.height + 1 > app.lowestFloor): 
             self.isOnGround = True
         else:
             for left, top, width, height in app.allBlocks:
-                if (self.topY + self.linkHeight + 1 > top and left < self.centerX < left + width):
+                if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
                     self.isOnGround = True
             self.isOnGround = False
     

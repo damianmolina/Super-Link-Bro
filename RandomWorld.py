@@ -188,6 +188,9 @@ def moveEverything(app, dx, dy):
         newLeft, newTop = left + dx, top + dy
         app.itemBlocks[i] = (newLeft, newTop, width, height)
 
+    for item in app.items:
+        item.leftX += dx
+
 
     for tektite in app.tektites:
         tektite.leftX += dx
