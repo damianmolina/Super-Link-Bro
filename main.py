@@ -13,7 +13,7 @@ def restartApp(app):
     # Screen width and height
     app.width = 896
     app.height = 448
-    app.stepsPerSecond = 10
+    app.stepsPerSecond = 15
 
 
     # Attributes to track where the mouse is
@@ -77,6 +77,7 @@ def restartApp(app):
     app.changeInBackground = 0
 
     app.timer = 0
+    app.checkEnemyTimer = 0
     app.switchTimer = True
     app.prob = random.random()
 
@@ -87,29 +88,26 @@ def restartApp(app):
     
 
 def redrawAll(app):
-    if (not app.gameOver):
-        # Draws the background
-        drawImage(CMUImage(app.clouds), 0, 0)
+    # Draws the background
+    drawImage(CMUImage(app.clouds), 0, 0)
 
-        drawImage(CMUImage(app.ground), 0, 400)
+    drawImage(CMUImage(app.ground), 0, 400)
 
-        # Draw all of the blocks
-        drawBlocks(app)
+    # Draw all of the blocks
+    drawBlocks(app)
 
-        drawArrows(app)
+    drawArrows(app)
 
-        drawBombs(app)   
+    drawBombs(app)   
 
-        drawLink(app)
+    drawLink(app)
 
-        drawEnemies(app)
+    drawEnemies(app)
 
-        drawItems(app)
+    drawItems(app)
 
-        # Draws pointer for (x,y) of mouse
-        drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
-    else:
-        drawEndScreen(app)
+    # Draws pointer for (x,y) of mouse
+    drawLabel(f'({app.labelX}, {app.labelY})', app.labelX, app.labelY - 10)
 
 
 
@@ -154,6 +152,10 @@ def onKeyRelease(app, key):
 def onStep(app):
     app.allBlocks = app.collisionBlocks + app.itemBlocks
     app.timer += 1
+    app.checkEnemyTimer += 1
+    if (app.link.health <= 0):
+        restartApp(app)
+
     if (app.timer % 32 == 0): 
         app.switchTimer = not app.switchTimer
 
@@ -184,7 +186,7 @@ def onStep(app):
             app.bombs[0].move(app)
 
     totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
-    if (totalNumOfEnemies < 4):
+    if (totalNumOfEnemies < 1):
         prob = random.random()
         if (prob > 0.9):
             if (prob > 0.95):
@@ -212,13 +214,15 @@ def onStep(app):
         if (tektite.leftX < -64 or tektite.leftX > 928 or tektite.topY > 400):
             app.tektites.remove(tektite)
         
-        if (tektite.health == 0):
+        if (tektite.health <= 0):
             app.tektites.remove(tektite)
 
     for item in app.items:
         if (item.leftX < -32 or item.leftX > 928):
             app.items.remove(item)
-    
+
+    if (app.checkEnemyTimer >= 10):
+        checkEnemyCollisions(app)
     
     
     generateWorld(app)
@@ -235,8 +239,8 @@ def drawBombs(app):
 
 def drawLink(app):
     # Draws Link's boundary box
-    drawRect(app.link.leftX, app.link.topY, app.link.width, 
-             app.link.height, fill = None, border = 'black', borderWidth = 2)
+    # drawRect(app.link.leftX, app.link.topY, app.link.width, 
+    #          app.link.height, fill = None, border = 'black', borderWidth = 2)
     
     # Draws Link
     drawImage(CMUImage(app.link.image), app.link.leftX, app.link.topY)
@@ -263,7 +267,16 @@ def generateWorld(app):
         generateLeftCol(app)
         app.changeInBackground = 0
 
-
+def checkEnemyCollisions(app):
+    for tektite in app.tektites:
+        if (abs(app.link.centerX - tektite.centerX) < app.link.width and
+            abs(tektite.centerY - app.link.centerY) < app.link.height):
+            app.link.health -= tektite.damage
+            app.checkEnemyTimer = 0
+        elif (abs(app.link.centerY - tektite.centerY) < app.link.height and
+              abs(tektite.centerX - app.link.centerX) < app.link.width):
+            app.link.health -= tektite.damage
+            app.checkEnemyTimer = 0
 
 
     

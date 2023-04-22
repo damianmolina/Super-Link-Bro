@@ -43,8 +43,13 @@ class Link:
 
         # Link's movement speed
         self.moveSpeed = 8
+        self.originalVelocity = -25
+        self.currVelocity = -25
+        self.gravity = 2
 
         self.health = 5
+
+
 
 
     def move(self, app, dx, dy):
@@ -134,7 +139,7 @@ class Link:
                 # Link has to be standing on a ground
                 self.isOnGround = True
                 return True
-            elif (dy < 0 and self.topY > top + height and self.topY - 10 < top + height 
+            elif (dy < 0 and self.topY > top + height and self.topY - 20 < top + height 
                   and abs(blockCenterX - self.centerX) < self.width and self.isJumping):
                 self.topY = top + height
                 self.centerY = top + height + (self.height)/2
@@ -142,11 +147,16 @@ class Link:
                 # is instead falling
                 self.isJumping = False
                 self.isFalling = True
-                if (not findItem(Item(app, app.itemBlocks[i]), app)):
-                    app.items.append(Item(app, app.itemBlocks[i]))
+                item = Item(app, app.itemBlocks[i])
+                if (not findItem(item, app)):
+                    if (item.item == 1):
+                        self.currVelocity = -30
+                        self.originalVelocity = -30
+                    elif (item.item == 2):
+                        self.moveSpeed = 16
+                    app.items.append(item)
                 
                 return True
-        return False
 
     
 
@@ -162,12 +172,12 @@ class Link:
     # Causes Link to jump
     def jump(self):
         self.isFalling = False
-        self.move(app, 0, Link.currVelocity + Link.gravity)
-        if (Link.currVelocity >= 0):
+        self.move(app, 0, self.currVelocity + self.gravity)
+        if (self.currVelocity >= 0):
             self.isFalling = True
             self.isJumping = False
         else:
-            Link.currVelocity += 2
+            self.currVelocity += 2
 
     # Checking whether Link is on a ground
     def checkGround(self):
@@ -181,12 +191,12 @@ class Link:
     
     # Falling movement
     def fall(self):
-        self.move(app, 0, Link.gravity)
+        self.move(app, 0, self.gravity)
         if (self.isOnGround):
-            Link.gravity = 2
-            Link.currVelocity = Link.originalVelocity
+            self.gravity = 2
+            self.currVelocity = self.originalVelocity
         else:
-            Link.gravity += 2
+            self.gravity += 2
         
 
 class Tektite:
@@ -215,6 +225,8 @@ class Tektite:
         self.originalVelocity = -25
         self.currVelocity = -25
         self.gravity = 1
+
+        self.damage = 1
 
         self.health = 2
     

@@ -20,7 +20,7 @@ class Arrow:
         self.arrowSpeed = 15
 
         # Location of arrow
-        self.leftX = app.width/2
+        self.leftX = app.link.centerX
         self.topY = app.link.topY
         self.width = self.height = 32
         self.centerX = self.leftX + (self.width)/2
