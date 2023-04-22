@@ -43,7 +43,7 @@ def restartApp(app):
     app.link = Link(app)
     
     # Link has five hearts
-    app.lives = app.link.health
+    app.lives = list()
 
     # Arrows
     app.arrows = list()
@@ -98,7 +98,7 @@ def restartApp(app):
 
 
 def redrawAll(app):
-    # Draws the background
+    # Draws the background (COMMENT THESE OUT FOR THE GAME TO RUN LONGER)
     drawImage(CMUImage(app.clouds), 0, 0)
     drawImage(CMUImage(app.ground), 0, 400)
 
@@ -119,6 +119,8 @@ def redrawAll(app):
 
     # Draws the items that appear on top of item blocks
     drawItems(app)
+
+    drawHealth(app)
 
 
 # Draws all blocks
@@ -283,6 +285,14 @@ def drawEnemies(app):
 def drawItems(app):
     for item in app.items:
         drawImage(CMUImage(item.image), item.leftX, item.topY)
+
+
+def drawHealth(app):
+    # From https://opengameart.org/content/heart-pixel-art
+    heart = Image.open('Images/Heart.png')
+    heart = heart.resize((30, 30))
+    for i in range(app.link.health):
+        drawImage(CMUImage(heart), i*50, 0)
 
 # Generates new terrain depending on how much the background has shifted
 def generateWorld(app):
