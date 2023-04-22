@@ -220,6 +220,7 @@ def onStep(app):
             app.items.remove(item)
     
     
+    
     generateWorld(app)
     
 

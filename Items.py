@@ -18,7 +18,7 @@ class Item:
     def __eq__(self, other):
         if (not isinstance(other, Item)): return False
 
-        if (self.item == other.item):
+        if (self.leftX == other.leftX and self.topY == other.topY):
             return True
         else:
             return False        

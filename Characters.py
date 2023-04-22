@@ -44,6 +44,8 @@ class Link:
         # Link's movement speed
         self.moveSpeed = 8
 
+        self.health = 5
+
 
     def move(self, app, dx, dy):
         # Flip Link's image if he's looking the wrong way
@@ -140,7 +142,8 @@ class Link:
                 # is instead falling
                 self.isJumping = False
                 self.isFalling = True
-                app.items.append(Item(app, app.itemBlocks[i]))
+                if (not findItem(Item(app, app.itemBlocks[i]), app)):
+                    app.items.append(Item(app, app.itemBlocks[i]))
                 
                 return True
         return False
@@ -339,3 +342,9 @@ class Stalfo:
             self.stalfoLeftX = -64
         
         self.stalfoTopY = 0
+
+def findItem(o, app):
+    for v in app.items:
+        if (o == v):
+            return True
+    return False
