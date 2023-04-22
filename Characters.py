@@ -139,7 +139,7 @@ class Link:
                 # Link has to be standing on a ground
                 self.isOnGround = True
                 return True
-            elif (dy < 0 and self.topY + dy > top + height and self.topY + 2*dy < top + height 
+            elif (dy < 0 and self.topY + dy > top + height and self.topY - 40 < top + height 
                   and abs(blockCenterX - self.centerX) < self.width - 10 and self.isJumping):
                 self.topY = top + height
                 self.centerY = top + height + (self.height)/2

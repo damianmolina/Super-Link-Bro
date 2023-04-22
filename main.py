@@ -6,6 +6,7 @@ from RandomWorld import *
 from Items import *
 import random
 
+
 def onAppStart(app):
     restartApp(app)
 
@@ -85,13 +86,13 @@ def restartApp(app):
     app.items = list()
 
     app.gameOver = False
-    
+
 
 def redrawAll(app):
     # Draws the background
-    #drawImage(CMUImage(app.clouds), 0, 0)
+    drawImage(CMUImage(app.clouds), 0, 0)
 
-    #drawImage(CMUImage(app.ground), 0, 400)
+    drawImage(CMUImage(app.ground), 0, 400)
 
     # Draw all of the blocks
     drawBlocks(app)
@@ -142,7 +143,7 @@ def onKeyPress(app, key):
                 app.bombs.append(Bomb(app))
                 item.used = True
 
-# Makes sure to stop moving Link left or rightd.a
+# Makes sure to stop moving Link left or right
 def onKeyRelease(app, key):
     if (key == 'd'):
         app.moveRight = False
@@ -186,7 +187,7 @@ def onStep(app):
             app.bombs[0].move(app)
 
     totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
-    if (totalNumOfEnemies < 1):
+    if (totalNumOfEnemies < 4):
         prob = random.random()
         if (prob > 0.9):
             if (prob > 0.95):
