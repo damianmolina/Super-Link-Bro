@@ -98,11 +98,20 @@ def restartApp(app):
     # Items that show up from item blocks
     app.items = list()
 
+    scoreText = open("Score.txt", "r")
+    blah = scoreText.read()
+    print(blah)
+    scoreText.close()
+
+    app.currentScore = 0
+
+
 
 
 def redrawAll(app):
     if (app.startScreen):
         drawStartScreen(app)
+        #drawHighScore(app)
     else:
         # Draws the background (COMMENT THESE OUT FOR THE GAME TO RUN LONGER)
         drawImage(CMUImage(app.clouds), 0, 0)
@@ -127,6 +136,8 @@ def redrawAll(app):
         drawItems(app)
 
         drawHealth(app)
+
+        drawScore(app)
 
 
 # Draws all blocks
@@ -273,6 +284,12 @@ def onStep(app):
 
 def drawStartScreen(app):
     drawImage(CMUImage(app.startingScreenImage), 0, 0)
+
+def drawHighScore(app):
+    drawLabel(app.highScore, 500, 300, size=25, fill='black')
+
+def drawScore(app):
+    drawLabel(str(app.currentScore), 0, 0)
 
 # Draws arrows
 def drawArrows(app):
