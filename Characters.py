@@ -13,7 +13,8 @@ class Link:
         linkSpriteSheet = linkSpriteSheet.resize((268, 228))
         linkSpriteSheet = linkSpriteSheet.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         self.walk = linkSpriteSheet.crop((53, 0, 106, 50))
-        self.walkRight = self.walk.resize((40, 40))
+        self.walk = self.walk.resize((40, 40))
+        self.walkRight = self.walk
         self.walkLeft = self.walkRight.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         self.bowRight = linkSpriteSheet.crop((80, 121, 133, 171))
         self.bowRight = self.bowRight.resize((40, 40))
@@ -89,7 +90,7 @@ class Link:
             # Checks direction of movement, whether it will collide and whether Link's center
             # is in the right spot for a collision to occur
             if (dx > 0 and self.leftX < left and self.leftX + self.width + 1 > left
-                and abs(blockCenterY - self.centerY) < self.height - 6):
+                and abs(blockCenterY - self.centerY) < self.height):
                 # Moves entire background and checks to make sure Link is still
                 # on ground
                 moveEverything(app, -(left - (self.leftX + self.width)), 0)

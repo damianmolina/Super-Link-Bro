@@ -15,7 +15,10 @@ def restartApp(app):
     # Screen width and height
     app.width = 896
     app.height = 448
-    app.stepsPerSecond = 15
+    app.stepsPerSecond = 13
+
+    app.startScreen = True
+    app.startingScreenImage = Image.open('Images/StartingScreen.png')
 
     # Tells whether Link is moving right or left
     app.moveRight = False
@@ -98,29 +101,32 @@ def restartApp(app):
 
 
 def redrawAll(app):
-    # Draws the background (COMMENT THESE OUT FOR THE GAME TO RUN LONGER)
-    drawImage(CMUImage(app.clouds), 0, 0)
-    drawImage(CMUImage(app.ground), 0, 400)
+    if (app.startScreen):
+        drawStartScreen(app)
+    else:
+        # Draws the background (COMMENT THESE OUT FOR THE GAME TO RUN LONGER)
+        drawImage(CMUImage(app.clouds), 0, 0)
+        drawImage(CMUImage(app.ground), 0, 400)
 
-    # Draws all of the blocks
-    drawBlocks(app)
+        # Draws all of the blocks
+        drawBlocks(app)
 
-    # Draws the arrows
-    drawArrows(app)
+        # Draws the arrows
+        drawArrows(app)
 
-    # Draws the bombs
-    drawBombs(app)   
+        # Draws the bombs
+        drawBombs(app)   
 
-    # Draws Link
-    drawLink(app)
+        # Draws Link
+        drawLink(app)
 
-    # Draws the enemies
-    drawEnemies(app)
+        # Draws the enemies
+        drawEnemies(app)
 
-    # Draws the items that appear on top of item blocks
-    drawItems(app)
+        # Draws the items that appear on top of item blocks
+        drawItems(app)
 
-    drawHealth(app)
+        drawHealth(app)
 
 
 # Draws all blocks
@@ -134,7 +140,9 @@ def drawBlocks(app):
 
 # Controls movements of Link
 def onKeyPress(app, key):
-    if (key == 'd'):
+    if (key == 'r'):
+        app.startScreen = False
+    elif (key == 'd'):
         app.moveRight = True
     elif (key == 'a'):
         app.moveLeft = True
@@ -167,100 +175,105 @@ def onKeyRelease(app, key):
             app.link.image = app.link.walkLeft
 
 def onStep(app):
-    # Constantly updates location of all blocks
-    app.allBlocks = app.collisionBlocks + app.itemBlocks
+    if (not app.startScreen):
+        # Constantly updates location of all blocks
+        app.allBlocks = app.collisionBlocks + app.itemBlocks
 
-    app.timer += 1
-    app.checkEnemyTimer += 1
+        app.timer += 1
+        app.checkEnemyTimer += 1
 
-    # If Link's health is <= 0, game is over --> restarts game
-    if (app.link.health <= 0):
-        restartApp(app)
+        # If Link's health is <= 0, game is over --> restarts game
+        if (app.link.health <= 0):
+            restartApp(app)
 
-    # This is the buffer time for enemy movement
-    if (app.timer % 32 == 0): 
-        app.switchTimer = not app.switchTimer
+        # This is the buffer time for enemy movement
+        if (app.timer % 32 == 0): 
+            app.switchTimer = not app.switchTimer
 
-    # Following methods move Link based on key presses
-    if (app.moveRight):
-        app.link.move(app, app.link.moveSpeed, 0)
+        # Following methods move Link based on key presses
+        if (app.moveRight):
+            app.link.move(app, app.link.moveSpeed, 0)
 
-    if (app.moveLeft):
-        app.link.move(app, -(app.link.moveSpeed), 0)
+        if (app.moveLeft):
+            app.link.move(app, -(app.link.moveSpeed), 0)
 
-    if (app.link.isJumping):
-        app.link.jump()
+        if (app.link.isJumping):
+            app.link.jump()
 
-    if (app.link.isFalling):
-        app.link.fall()
-    
+        if (app.link.isFalling):
+            app.link.fall()
+        
 
-    # Cycles through arrows to see whether they've collided. If not, continues
-    # to move them 
-    for arrow in app.arrows:
-        if (arrow.hasCollided):
-            app.arrows.remove(arrow)
-        else:
-            arrow.shoot()
-
-    # Cycles through bombs to see whether they've collided. If not, continues
-    # to move them  
-    if (len(app.bombs) > 0):
-        if (app.bombs[0].hasCollided):
-            app.bombs.pop()
-        else:
-            app.bombs[0].move(app)
-
-    totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
-    # Will only spawn up to five enemies max
-    if (totalNumOfEnemies < 4):
-        prob = random.random()
-        if (prob > 0.95):
-            app.tektites.append(Tektite(app))
-  
-    if (app.switchTimer):
-        for tektite in app.tektites:
-            # 70% chance of moving toward Link, 30% of moving away
-            if (app.prob > 0.3):
-                tektite.moveTowardLink(app, tektite.moveSpeed)
+        # Cycles through arrows to see whether they've collided. If not, continues
+        # to move them 
+        for arrow in app.arrows:
+            if (arrow.hasCollided):
+                app.arrows.remove(arrow)
             else:
-                tektite.moveAwayFromLink(app, tektite.moveSpeed)
+                arrow.shoot()
 
+        # Cycles through bombs to see whether they've collided. If not, continues
+        # to move them  
+        if (len(app.bombs) > 0):
+            if (app.bombs[0].hasCollided):
+                app.bombs.pop()
+            else:
+                app.bombs[0].move(app)
+
+        totalNumOfEnemies = len(app.tektites) + len(app.stalfos)
+        # Will only spawn up to five enemies max
+        if (totalNumOfEnemies < 4):
             prob = random.random()
-            # 10% chance of jumping
-            if (prob > 0.9):
-                tektite.isJumping = True
-    else:
-        # Changes the probability attribute of app
-        app.prob = random.random()
+            if (prob > 0.95):
+                app.tektites.append(Tektite(app))
     
-    # Cycles through tektites to move them or delete them if their health <= 0
-    # or if they're out of bounds
-    for tektite in app.tektites:
-        if (tektite.isJumping):
-            tektite.jump()
-        if (tektite.isFalling):
-            tektite.fall()
+        if (app.switchTimer):
+            for tektite in app.tektites:
+                # 70% chance of moving toward Link, 30% of moving away
+                if (app.prob > 0.3):
+                    tektite.moveTowardLink(app, tektite.moveSpeed)
+                else:
+                    tektite.moveAwayFromLink(app, tektite.moveSpeed)
+
+                prob = random.random()
+                # 10% chance of jumping
+                if (prob > 0.9):
+                    tektite.isJumping = True
+        else:
+            # Changes the probability attribute of app
+            app.prob = random.random()
         
-        if (tektite.leftX < -64 or tektite.leftX > 956 or tektite.topY > 400):
-            app.tektites.remove(tektite)
+        # Cycles through tektites to move them or delete them if their health <= 0
+        # or if they're out of bounds
+        for tektite in app.tektites:
+            if (tektite.isJumping):
+                tektite.jump()
+            if (tektite.isFalling):
+                tektite.fall()
+            
+            if (tektite.leftX < -64 or tektite.leftX > 956 or tektite.topY > 400):
+                app.tektites.remove(tektite)
+            
+            if (tektite.health <= 0):
+                app.tektites.remove(tektite)
+
+        # Deletes items if they are offscreen
+        for item in app.items:
+            if (item.leftX < -32 or item.leftX > 956):
+                app.items.remove(item)
+
+        # 10 steps is the buffer time for Link to take damage
+        if (app.checkEnemyTimer >= 10):
+            checkEnemyCollisions(app)
+
         
-        if (tektite.health <= 0):
-            app.tektites.remove(tektite)
+        # Generates new terrain on either side of Link
+        generateWorld(app)
 
-    # Deletes items if they are offscreen
-    for item in app.items:
-        if (item.leftX < -32 or item.leftX > 956):
-            app.items.remove(item)
 
-    # 10 steps is the buffer time for Link to take damage
-    if (app.checkEnemyTimer >= 10):
-        checkEnemyCollisions(app)
+def drawStartScreen(app):
+    drawImage(CMUImage(app.startingScreenImage), 0, 0)
 
-    
-    # Generates new terrain on either side of Link
-    generateWorld(app)
-    
 # Draws arrows
 def drawArrows(app):
     for arrow in app.arrows:
