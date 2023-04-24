@@ -99,8 +99,7 @@ def restartApp(app):
     app.items = list()
 
     scoreText = open("Score.txt", "r")
-    blah = scoreText.read()
-    print(blah)
+    app.highScore = int(scoreText.read())
     scoreText.close()
 
     app.currentScore = 0
@@ -111,7 +110,7 @@ def restartApp(app):
 def redrawAll(app):
     if (app.startScreen):
         drawStartScreen(app)
-        #drawHighScore(app)
+        drawHighScore(app)
     else:
         # Draws the background (COMMENT THESE OUT FOR THE GAME TO RUN LONGER)
         drawImage(CMUImage(app.clouds), 0, 0)
@@ -195,6 +194,13 @@ def onStep(app):
 
         # If Link's health is <= 0, game is over --> restarts game
         if (app.link.health <= 0):
+            scoreText = open('Score.txt', 'r+')
+            prevHighScore = int(scoreText.read())
+            if (app.currentScore > prevHighScore):
+                newHighScore = open('Score.txt', 'w')
+                newHighScore.write(str(app.currentScore))
+                newHighScore.close()
+            scoreText.close()
             restartApp(app)
 
         # This is the buffer time for enemy movement
@@ -267,6 +273,7 @@ def onStep(app):
             
             if (tektite.health <= 0):
                 app.tektites.remove(tektite)
+                app.currentScore += 100
 
         # Deletes items if they are offscreen
         for item in app.items:
@@ -286,10 +293,11 @@ def drawStartScreen(app):
     drawImage(CMUImage(app.startingScreenImage), 0, 0)
 
 def drawHighScore(app):
-    drawLabel(app.highScore, 500, 300, size=25, fill='black')
+    drawLabel(app.highScore, 675, 318, size=25, fill='black', align='left')
 
 def drawScore(app):
-    drawLabel(str(app.currentScore), 0, 0)
+    drawLabel('Score:', 550, 15, size=25, fill='black')
+    drawLabel(str(app.currentScore), 600, 16, size=25, fill='black', align='left')
 
 # Draws arrows
 def drawArrows(app):

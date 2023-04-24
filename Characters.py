@@ -69,11 +69,13 @@ class Link:
         if (dx > 0 and not self.isCollisionX(app, dx)):
             moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
+            app.currentScore += (abs(dx))//5
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
             moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
+            app.currentScore += ((abs(dx)))//5
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):
