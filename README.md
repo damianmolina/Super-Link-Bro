@@ -3,4 +3,4 @@ Based on the original Super Mario Bros, this game welcomes the beloved character
 
 To run the project, simply used "cmd + b" or click the arrow button on the top-right corner when opening the file titled "main.py" in VSCode. No additional libraries (other than cmu_graphics) is required to run the game!
 
-There are no shortcut commands to the game, but do remember that Link can be moved through the "wasd" keys and shoots arrows and bombs through the keys "p" and "o", respectively.
+Shortcut commands include pressing "m" to implement the movement boost and "j" to implement the jump boost for Link.Do remember that Link can be moved through the "wasd" keys and shoots arrows and bombs (when acquired) through the keys "p" and "o", respectively.
