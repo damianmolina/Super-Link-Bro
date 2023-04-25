@@ -15,9 +15,11 @@ def restartApp(app):
     # Screen width and height
     app.width = 896
     app.height = 448
-    app.stepsPerSecond = 13
+    app.stepsPerSecond = 12
 
+    # Game begins with a start screen
     app.startScreen = True
+    # Image was drawn from myself using a pixel art editor
     app.startingScreenImage = Image.open('Images/StartingScreen.png')
 
     # Tells whether Link is moving right or left
@@ -60,6 +62,7 @@ def restartApp(app):
     # Stalfos
     app.stalfos = list()
 
+    # All enemies
     app.enemies = app.tektites + app.stalfos
 
     # Brick image from https://www.vhv.rs/viewpic/TihwJTi_mario-brick-png-super-mario-bros-block-pixel/
@@ -100,10 +103,12 @@ def restartApp(app):
     # Items that show up from item blocks
     app.items = list()
 
+    # Accesses score text file which keeps highest score 
     scoreText = open("Score.txt", "r")
     app.highScore = int(scoreText.read())
     scoreText.close()
 
+    # Keeps track of the current score 
     app.currentScore = 0
 
 
@@ -111,6 +116,7 @@ def restartApp(app):
 
 def redrawAll(app):
     if (app.startScreen):
+        # Draws start screen with high score shown
         drawStartScreen(app)
         drawHighScore(app)
     else:
@@ -136,8 +142,10 @@ def redrawAll(app):
         # Draws the items that appear on top of item blocks
         drawItems(app)
 
+        # Draws hearts to represent how many more hits Link can take
         drawHealth(app)
 
+        # Draws current score that the player has gotten so far
         drawScore(app)
 
 
@@ -152,7 +160,8 @@ def drawBlocks(app):
 
 # Controls movements of Link
 def onKeyPress(app, key):
-    if (key == 'r'):
+    # Must press 'r' to get past start screen
+    if (key == 'r' or key == 'R'):
         app.startScreen = False
     elif (key == 'd'):
         app.moveRight = True
@@ -181,6 +190,7 @@ def onKeyRelease(app, key):
     elif (key == 'a'):
         app.moveLeft = False
     elif (key == 'p'):
+        # Makes sure that Link is looking the right way
         if (app.link.lookingRight):
             app.link.image = app.link.walkRight
         else:
@@ -191,6 +201,7 @@ def onStep(app):
         # Constantly updates location of all blocks
         app.allBlocks = app.collisionBlocks + app.itemBlocks
 
+        # Constantly updates total number of enemies
         app.enemies = app.tektites + app.stalfos
 
 
@@ -201,11 +212,15 @@ def onStep(app):
         if (app.link.health <= 0):
             scoreText = open('Score.txt', 'r+')
             prevHighScore = int(scoreText.read())
+            # Check if current score is higher than previous high score, if so,
+            # replace text file with new high score
             if (app.currentScore > prevHighScore):
                 newHighScore = open('Score.txt', 'w')
                 newHighScore.write(str(app.currentScore))
                 newHighScore.close()
             scoreText.close()
+
+            # Restart the game
             restartApp(app)
 
         # This is the buffer time for enemy movement
@@ -262,14 +277,14 @@ def onStep(app):
 
                 prob = random.random()
                 # 10% chance of jumping
-                if (prob > 0.9):
+                if (prob > 0.9 and enemy.isJumping == False):
                     enemy.isJumping = True
         else:
             # Changes the probability attribute of app
             app.prob = random.random()
         
-        # Cycles through tektites to move them or delete them if their health <= 0
-        # or if they're out of bounds
+        # Cycles through tektites and stalfosto move them or delete them 
+        # if their health <= 0 or if they're out of bounds
         for tektite in app.tektites:
             if (tektite.isJumping):
                 tektite.jump()
@@ -281,6 +296,7 @@ def onStep(app):
             
             if (tektite.health <= 0):
                 app.tektites.remove(tektite)
+                # Add 100 points since Link killed them 
                 app.currentScore += 100
 
         for stalfo in app.stalfos:
@@ -294,6 +310,7 @@ def onStep(app):
             
             if (stalfo.health <= 0):
                 app.stalfos.remove(stalfo)
+                # Add 100 points since Link killed them 
                 app.currentScore += 100
 
         # Deletes items if they are offscreen
@@ -309,13 +326,15 @@ def onStep(app):
         # Generates new terrain on either side of Link
         generateWorld(app)
 
-
+# Draws the start screen
 def drawStartScreen(app):
     drawImage(CMUImage(app.startingScreenImage), 0, 0)
 
+# Draws high screen that shows up on start screen
 def drawHighScore(app):
     drawLabel(app.highScore, 675, 318, size=25, fill='black', align='left')
 
+# Draws current score that will appear top-right when playing the game
 def drawScore(app):
     drawLabel('Score:', 550, 15, size=25, fill='black')
     drawLabel(str(app.currentScore), 600, 16, size=25, fill='black', align='left')
@@ -348,7 +367,7 @@ def drawItems(app):
     for item in app.items:
         drawImage(CMUImage(item.image), item.leftX, item.topY)
 
-
+# Draw hearts to represent Link's health in the top-left
 def drawHealth(app):
     # From https://opengameart.org/content/heart-pixel-art
     heart = Image.open('Images/Heart.png')
