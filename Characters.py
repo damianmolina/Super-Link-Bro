@@ -213,7 +213,8 @@ class Link:
             self.gravity = 2
             self.currVelocity = self.originalVelocity
         else:
-            self.gravity += 2
+            if (self.gravity < 20):
+                self.gravity += 2
         
 
 class Tektite:

@@ -52,6 +52,7 @@ def restartApp(app):
 
     # Arrows
     app.arrows = list()
+    # Timer to ensure that arrows can't be spammed when shooting
     app.arrowTimer = 0
 
     # Bombs
@@ -111,6 +112,7 @@ def restartApp(app):
 
     # Keeps track of the current score 
     app.currentScore = 0
+    
 
 
 
@@ -171,7 +173,7 @@ def onKeyPress(app, key):
     elif (key == 'w' and app.link.isOnGround == True):
         app.link.isOnGround = False
         app.link.isJumping = True
-    # Shoot arrows with 'p'
+    # Shoot arrows with 'p', app.arrowTimer makes sure that arrows aren't spammed
     elif (key == 'p' and app.arrowTimer > 10):
         app.arrowTimer = 0
         app.arrows.append(Arrow(app))
@@ -206,7 +208,7 @@ def onStep(app):
         # Constantly updates total number of enemies
         app.enemies = app.tektites + app.stalfos
 
-
+        # Each timer increases by one when onStep(app) is called
         app.timer += 1
         app.checkEnemyTimer += 1
         app.arrowTimer += 1
@@ -339,8 +341,8 @@ def drawHighScore(app):
 
 # Draws current score that will appear top-right when playing the game
 def drawScore(app):
-    drawLabel('Score:', 650, 15, size=25, fill='black')
-    drawLabel(str(app.currentScore), 700, 16, size=25, fill='black', align='left')
+    drawLabel('Score:', 700, 15, size=25, fill='black')
+    drawLabel(str(app.currentScore), 750, 16, size=25, fill='black', align='left')
 
 # Draws arrows
 def drawArrows(app):
