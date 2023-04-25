@@ -52,6 +52,7 @@ def restartApp(app):
 
     # Arrows
     app.arrows = list()
+    app.arrowTimer = 0
 
     # Bombs
     app.bombs = list()
@@ -171,7 +172,8 @@ def onKeyPress(app, key):
         app.link.isOnGround = False
         app.link.isJumping = True
     # Shoot arrows with 'p'
-    elif (key == 'p'):
+    elif (key == 'p' and app.arrowTimer > 10):
+        app.arrowTimer = 0
         app.arrows.append(Arrow(app))
         if (app.link.lookingRight):
             app.link.image = app.link.bowRight
@@ -207,6 +209,7 @@ def onStep(app):
 
         app.timer += 1
         app.checkEnemyTimer += 1
+        app.arrowTimer += 1
 
         # If Link's health is <= 0, game is over --> restarts game
         if (app.link.health <= 0):
@@ -270,7 +273,7 @@ def onStep(app):
         if (app.switchTimer):
             for enemy in app.enemies:
                 # 70% chance of moving toward Link, 30% of moving away
-                if (app.prob > 0.3):
+                if (app.prob > 0.2):
                     enemy.moveTowardLink(app, enemy.moveSpeed)
                 else:
                     enemy.moveAwayFromLink(app, enemy.moveSpeed)
@@ -336,8 +339,8 @@ def drawHighScore(app):
 
 # Draws current score that will appear top-right when playing the game
 def drawScore(app):
-    drawLabel('Score:', 550, 15, size=25, fill='black')
-    drawLabel(str(app.currentScore), 600, 16, size=25, fill='black', align='left')
+    drawLabel('Score:', 650, 15, size=25, fill='black')
+    drawLabel(str(app.currentScore), 700, 16, size=25, fill='black', align='left')
 
 # Draws arrows
 def drawArrows(app):
