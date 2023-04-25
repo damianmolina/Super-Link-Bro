@@ -307,7 +307,8 @@ class Tektite:
             self.gravity = 1
             self.currVelocity = self.originalVelocity
         else:
-            self.gravity += 2
+            if (self.gravity < 20):
+                self.gravity += 2
 
     def isCollisionX(self, app, dx):
         # Goes through each block
@@ -451,7 +452,8 @@ class Stalfo:
             self.gravity = 1
             self.currVelocity = self.originalVelocity
         else:
-            self.gravity += 2
+            if (self.gravity < 20):
+                self.gravity += 2
 
     def isCollisionX(self, app, dx):
         # Goes through each block

@@ -186,6 +186,11 @@ def onKeyPress(app, key):
         app.bombs.append(Bomb(app))
         # Once thrown, Link no longer has a bomb
         app.link.hasBomb = False
+    elif (key == 'm'):
+        app.link.moveSpeed = 16
+    elif (key == 'j' and not app.link.isJumping):
+        app.link.currVelocity = -30
+        app.link.originalVelocity = -30
 
 # Makes sure to stop moving Link left or right
 def onKeyRelease(app, key):
