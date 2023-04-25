@@ -234,6 +234,11 @@ def moveEverything(app, dx, dy):
     for tektite in app.tektites:
         tektite.leftX += dx
         tektite.centerX += dx
+    
+    for stalfo in app.stalfos:
+        stalfo.leftX += dx
+        stalfo.centerX += dx
+        
     # Moves arrows
     for arrow in app.arrows:
         arrow.leftX += dx

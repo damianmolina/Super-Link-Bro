@@ -374,11 +374,140 @@ class Stalfo:
 
         probOfSide = random.random()
         if (probOfSide > 0.5):
-            self.stalfoLeftX = 928
+            self.leftX = 928
         else:
-            self.stalfoLeftX = -64
+            self.leftX = -64
         
-        self.stalfoTopY = 0
+        self.topY = 0
+        self.width = self.height = 32
+        self.centerX = self.leftX + (self.width)/2
+        self.centerY = self.topY + (self.height)/2
+
+        self.isJumping = False
+        self.isOnGround = False
+        self.isFalling = True
+        self.moveSpeed = 3
+
+        self.originalVelocity = -20
+        self.currVelocity = -20
+        self.gravity = 2
+
+        # Amount of damage that a Tektite can do
+        self.damage = 1
+
+        # Amount of health that a Tektite has
+        self.health = 2
+    
+        # Detrmines where Link is in relation to Tektite, then moves towards Link
+    def moveTowardLink(self, app, dx):
+        self.checkGround()
+        if (self.leftX > app.link.leftX and not self.isCollisionX(app, -dx)):
+            self.leftX -= dx
+            self.centerX -= dx
+        elif (not self.isCollisionX(app, dx)):
+            self.leftX += dx
+            self.centerX += dx
+
+    # Detrmines where Link is in relation to Tektite, then moves away from Link
+    def moveAwayFromLink(self, app, dx):
+        self.checkGround()
+        if (self.leftX > app.link.leftX and not self.isCollisionX(app, dx)):
+            self.leftX += dx
+            self.centerX += dx
+        elif (not self.isCollisionX(app, -dx)):
+            self.leftX -= dx
+            self.centerX -= dx
+    
+    # Causes Tektite to jump
+    def jump(self):
+        self.isFalling = False
+        if (not self.isCollisionY(app, self.currVelocity + self.gravity)):
+            self.topY += self.currVelocity + self.gravity
+            self.centerY += self.currVelocity + self.gravity
+        # Once velocity is at or above zero, Tektite starts falling
+        if (self.currVelocity >= 0):
+            self.isFalling = True
+            self.isJumping = False
+        else:
+            self.currVelocity += 2
+
+    # Checking whether Link is on a ground
+    def checkGround(self):
+        if (self.topY + self.height + 1 > app.lowestFloor): 
+            self.isOnGround = True
+        else:
+            for left, top, width, height in app.allBlocks:
+                if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
+                    self.isOnGround = True
+            self.isOnGround = False
+    
+    # Falling movement
+    def fall(self):
+        if (not self.isCollisionY(app, self.gravity)):
+            self.topY += self.gravity
+            self.centerY += self.gravity
+        if (self.isOnGround):
+            self.gravity = 1
+            self.currVelocity = self.originalVelocity
+        else:
+            self.gravity += 2
+
+    def isCollisionX(self, app, dx):
+        # Goes through each block
+        for left, top, width, height in app.allBlocks:
+            blockCenterY = top + height/2
+            # Checks direction of movement, whether it will collide and whether Tektite's center
+            # is in the right spot for a collision to occur
+            if (dx > 0 and self.leftX < left and self.leftX + self.width + 1 > left
+                and abs(blockCenterY - self.centerY) < self.height):
+                self.leftX = left - self.width
+                self.centerX = self.leftX + self.width/2
+                return True
+            elif (dx < 0 and self.leftX > left and self.leftX - 1 < left + width 
+                  and abs(blockCenterY - self.centerY) < self.height):
+                self.leftX = left + width
+                self.centerX = self.leftX + self.width/2
+                return True
+        return False
+    
+    def isCollisionY(self, app, dy):
+        for left, top, width, height in app.allBlocks:
+            blockCenterX = left + width/2
+            # Checks direction of movement, whether it will collide and whether Tektites's center
+            # is in the right spot for a collision to occur
+            if (dy > 0 and self.topY < top and self.topY + self.height + dy > top 
+                and abs(blockCenterX - self.centerX) < self.width - 10
+                or (self.topY + self.height + dy > app.lowestFloor and self.isFalling)):
+                # An if-statement to determine whether Tektite is colliding with floor
+                # or with a block
+                if (self.topY + self.height + dy > app.lowestFloor):
+                    self.topY = app.lowestFloor - self.height
+                    self.centerY = app.lowestFloor - (self.height)/2
+                else:
+                    self.topY = top - self.height
+                    self.centerY = top - (self.height)/2
+                # Tektite has to be standing on a ground
+                self.isOnGround = True
+                return True
+            elif (dy < 0 and self.topY > top + height and self.topY + dy < top + height 
+                  and abs(blockCenterX - self.centerX) < self.width - 1 and self.isJumping):
+                self.topY = top + height
+                self.centerY = top + height + (self.height)/2
+                # "Hitting" his head means that Tektite is no longer jumping but 
+                # is instead falling
+                self.isJumping = False
+                self.isFalling = True
+                return True
+        return False
+
+    # Tektites are equal to each other if they have the same x and y coordinates
+    def __eq__(self, other):
+        if (not isinstance(other, Stalfo)): return False
+
+        if (self.leftX == other.leftX and self.topY == other.topY):
+            return True
+        else:
+            return False
 ########################################################
 
 # Helper function to determine whether item is already on top of item block

@@ -60,6 +60,8 @@ def restartApp(app):
     # Stalfos
     app.stalfos = list()
 
+    app.enemies = app.tektites + app.stalfos
+
     # Brick image from https://www.vhv.rs/viewpic/TihwJTi_mario-brick-png-super-mario-bros-block-pixel/
     app.brick = Image.open('Images/Brick.png')
     app.brick = app.brick.crop((40, 40, 830, 830))
@@ -189,6 +191,9 @@ def onStep(app):
         # Constantly updates location of all blocks
         app.allBlocks = app.collisionBlocks + app.itemBlocks
 
+        app.enemies = app.tektites + app.stalfos
+
+
         app.timer += 1
         app.checkEnemyTimer += 1
 
@@ -242,20 +247,23 @@ def onStep(app):
         if (totalNumOfEnemies < 4):
             prob = random.random()
             if (prob > 0.95):
-                app.tektites.append(Tektite(app))
+                if (prob > 0.97):
+                    app.tektites.append(Tektite(app))
+                else:
+                    app.stalfos.append(Stalfo(app))
     
         if (app.switchTimer):
-            for tektite in app.tektites:
+            for enemy in app.enemies:
                 # 70% chance of moving toward Link, 30% of moving away
                 if (app.prob > 0.3):
-                    tektite.moveTowardLink(app, tektite.moveSpeed)
+                    enemy.moveTowardLink(app, enemy.moveSpeed)
                 else:
-                    tektite.moveAwayFromLink(app, tektite.moveSpeed)
+                    enemy.moveAwayFromLink(app, enemy.moveSpeed)
 
                 prob = random.random()
                 # 10% chance of jumping
                 if (prob > 0.9):
-                    tektite.isJumping = True
+                    enemy.isJumping = True
         else:
             # Changes the probability attribute of app
             app.prob = random.random()
@@ -273,6 +281,19 @@ def onStep(app):
             
             if (tektite.health <= 0):
                 app.tektites.remove(tektite)
+                app.currentScore += 100
+
+        for stalfo in app.stalfos:
+            if (stalfo.isJumping):
+                stalfo.jump()
+            if (stalfo.isFalling):
+                stalfo.fall()
+            
+            if (stalfo.leftX < -64 or stalfo.leftX > 956 or stalfo.topY > 400):
+                app.stalfos.remove(stalfo)
+            
+            if (stalfo.health <= 0):
+                app.stalfos.remove(stalfo)
                 app.currentScore += 100
 
         # Deletes items if they are offscreen
@@ -318,6 +339,9 @@ def drawLink(app):
 def drawEnemies(app):
     for tektite in app.tektites:
         drawImage(CMUImage(tektite.image), tektite.leftX, tektite.topY)
+    
+    for stalfo in app.stalfos:
+        drawImage(CMUImage(stalfo.image), stalfo.leftX, stalfo.topY)
 
 # Draws items on top of item blocks
 def drawItems(app):
@@ -343,15 +367,14 @@ def generateWorld(app):
 
 # Checks to see if Link has collided with enemies
 def checkEnemyCollisions(app):
-    for tektite in app.tektites:
-        if (abs(app.link.centerX - tektite.centerX) < app.link.width and
-            abs(tektite.centerY - app.link.centerY) < app.link.height):
-            app.link.health -= tektite.damage
+    for enemy in app.enemies:
+        if (abs(app.link.centerX - enemy.centerX) < app.link.width and
+            abs(enemy.centerY - app.link.centerY) < app.link.height):
+            app.link.health -= enemy.damage
             app.checkEnemyTimer = 0
-        elif (abs(app.link.centerY - tektite.centerY) < app.link.height and
-              abs(tektite.centerX - app.link.centerX) < app.link.width):
-            app.link.health -= tektite.damage
+        elif (abs(app.link.centerY - enemy.centerY) < app.link.height and
+              abs(enemy.centerX - app.link.centerX) < app.link.width):
+            app.link.health -= enemy.damage
             app.checkEnemyTimer = 0
-
 # Runs game
 runApp(app.width, app.height)
