@@ -142,18 +142,18 @@ class Bomb:
 
     # Checks for any horizontal collisions
     def isCollisionX(self, app, dx):
-        # Goes through all tektites
+        # Goes through all enemies
         for enemy in app.enemies:
             if (dx > 0 and self.leftX < enemy.leftX and self.leftX + self.width + 10 > enemy.leftX
                 and abs(enemy.centerY - self.centerY) < self.height - 10):
                 self.hasCollided = True
-                # Take away health from tektite
+                # Take away health from enemy
                 enemy.health -= self.damage
                 return True
             elif (dx < 0 and self.leftX > enemy.leftX and self.leftX - 10 < enemy.leftX + enemy.width 
                   and abs(enemy.centerY - self.centerY) < self.height - 10):
                 self.hasCollided = True
-                # Take away health from tektite
+                # Take away health from enemy
                 enemy.health -= self.damage
                 return True
         
@@ -173,18 +173,18 @@ class Bomb:
 
     # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
-        # Goes through all tektites
+        # Goes through all enemies
         for enemy in app.enemies:
             if (dy > 0 and self.topY < enemy.topY and self.topY + self.height + 10 > enemy.topY 
                 and abs(enemy.centerX - self.centerX) < self.width - 10):
                 self.hasCollided = True
-                # Take away health from tektite
+                # Take away health from enemy
                 enemy.health -= self.damage
                 return True
             elif (dy < 0 and self.topY > enemy.topY  + enemy.height and self.topY - 10 < enemy.topY + enemy.height 
                   and abs(enemy.centerX - self.centerX) < self.width - 10):
                 self.hasCollided = True
-                # Take away health from tektite
+                # Take away health from enemy
                 enemy.health -= self.damage
                 return True
         
