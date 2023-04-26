@@ -98,7 +98,10 @@ def restartApp(app):
     # Alternates to not make the enemies move constantly
     app.switchTimer = True
 
+    # This is the limit for which the player can earn points from moving (it will
+    # increase as time goes on)
     app.movementPointsLimit = 300
+    # Makes sure that Link has killed an enemy to allow for more points when moving
     app.hasKilledEnemy = False
 
     # Probability for enemies to spawn
@@ -293,7 +296,7 @@ def onStep(app):
             # Changes the probability attribute of app
             app.prob = random.random()
         
-        # Cycles through tektites and stalfosto move them or delete them 
+        # Cycles through tektites and stalfos to move them or delete them 
         # if their health <= 0 or if they're out of bounds
         for tektite in app.tektites:
             if (tektite.isJumping):
