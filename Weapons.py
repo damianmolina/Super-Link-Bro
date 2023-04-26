@@ -115,14 +115,6 @@ class Bomb:
         # Damage that it can do to enemies
         self.damage = 2
 
-    # Bombs are equal to each other when they're at the same location
-    def __eq__(self, other):
-        if (not isinstance(other, Bomb)): return False
-
-        if (self.leftX == other.leftX and self.topY == other.topY):
-            return True
-        else:
-            return False
 
     
     def move(self, app):
@@ -202,3 +194,12 @@ class Bomb:
                 return True
         
         return False
+
+    # Bombs are equal to each other when they're at the same location
+    def __eq__(self, other):
+        if (not isinstance(other, Bomb)): return False
+
+        if (self.leftX == other.leftX and self.topY == other.topY):
+            return True
+        else:
+            return False

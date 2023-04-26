@@ -155,59 +155,6 @@ def redrawAll(app):
         drawScore(app)
 
 
-# Draws all blocks
-def drawBlocks(app):
-    for left, top, width, height in app.collisionBlocks:
-        drawImage(CMUImage(app.brick), left, top)
-    
-    for left, top, width, height in app.itemBlocks:
-        drawImage(CMUImage(app.itemBlock), left, top)
-
-
-# Controls movements of Link
-def onKeyPress(app, key):
-    # Must press 'r' to get past start screen
-    if (key == 'r' or key == 'R'):
-        app.startScreen = False
-    elif (key == 'd'):
-        app.moveRight = True
-    elif (key == 'a'):
-        app.moveLeft = True
-    elif (key == 'w' and app.link.isOnGround == True):
-        app.link.isOnGround = False
-        app.link.isJumping = True
-    # Shoot arrows with 'p', app.arrowTimer makes sure that arrows aren't spammed
-    elif (key == 'p' and app.arrowTimer > 10):
-        app.arrowTimer = 0
-        app.arrows.append(Arrow(app))
-        if (app.link.lookingRight):
-            app.link.image = app.link.bowRight
-        else:
-            app.link.image = app.link.bowLeft
-    # Bomb can only be thrown if Link got it from an item block
-    elif (key == 'o' and app.link.hasBomb):
-        app.bombs.append(Bomb(app))
-        # Once thrown, Link no longer has a bomb
-        app.link.hasBomb = False
-    elif (key == 'm'):
-        app.link.moveSpeed = 16
-    elif (key == 'j' and not app.link.isJumping):
-        app.link.currVelocity = -30
-        app.link.originalVelocity = -30
-
-# Makes sure to stop moving Link left or right
-def onKeyRelease(app, key):
-    if (key == 'd'):
-        app.moveRight = False
-    elif (key == 'a'):
-        app.moveLeft = False
-    elif (key == 'p'):
-        # Makes sure that Link is looking the right way
-        if (app.link.lookingRight):
-            app.link.image = app.link.walkRight
-        else:
-            app.link.image = app.link.walkLeft
-
 def onStep(app):
     if (not app.startScreen):
         # Constantly updates location of all blocks
@@ -341,6 +288,80 @@ def onStep(app):
         # Generates new terrain on either side of Link
         generateWorld(app)
 
+# Controls movements of Link
+def onKeyPress(app, key):
+    # Must press 'r' to get past start screen
+    if (key == 'r' or key == 'R'):
+        app.startScreen = False
+    elif (key == 'd'):
+        app.moveRight = True
+    elif (key == 'a'):
+        app.moveLeft = True
+    elif (key == 'w' and app.link.isOnGround == True):
+        app.link.isOnGround = False
+        app.link.isJumping = True
+    # Shoot arrows with 'p', app.arrowTimer makes sure that arrows aren't spammed
+    elif (key == 'p' and app.arrowTimer > 10):
+        app.arrowTimer = 0
+        app.arrows.append(Arrow(app))
+        if (app.link.lookingRight):
+            app.link.image = app.link.bowRight
+        else:
+            app.link.image = app.link.bowLeft
+    # Bomb can only be thrown if Link got it from an item block
+    elif (key == 'o' and app.link.hasBomb):
+        app.bombs.append(Bomb(app))
+        # Once thrown, Link no longer has a bomb
+        app.link.hasBomb = False
+    elif (key == 'm'):
+        app.link.moveSpeed = 16
+    elif (key == 'j' and not app.link.isJumping):
+        app.link.currVelocity = -30
+        app.link.originalVelocity = -30
+
+# Makes sure to stop moving Link left or right
+def onKeyRelease(app, key):
+    if (key == 'd'):
+        app.moveRight = False
+    elif (key == 'a'):
+        app.moveLeft = False
+    elif (key == 'p'):
+        # Makes sure that Link is looking the right way
+        if (app.link.lookingRight):
+            app.link.image = app.link.walkRight
+        else:
+            app.link.image = app.link.walkLeft
+
+# Generates new terrain depending on how much the background has shifted
+def generateWorld(app):
+    if (app.changeInBackground <= -32):
+        generateRightCol(app)
+        app.changeInBackground = 0
+    elif (app.changeInBackground >= 32):
+        generateLeftCol(app)
+        app.changeInBackground = 0
+
+# Checks to see if Link has collided with enemies
+def checkEnemyCollisions(app):
+    for enemy in app.enemies:
+        if (abs(app.link.centerX - enemy.centerX) < app.link.width and
+            abs(enemy.centerY - app.link.centerY) < app.link.height):
+            app.link.health -= enemy.damage
+            app.checkEnemyTimer = 0
+        elif (abs(app.link.centerY - enemy.centerY) < app.link.height and
+              abs(enemy.centerX - app.link.centerX) < app.link.width):
+            app.link.health -= enemy.damage
+            app.checkEnemyTimer = 0
+
+############ DRAWING FUNCTIONS ##############
+# Draws all blocks
+def drawBlocks(app):
+    for left, top, width, height in app.collisionBlocks:
+        drawImage(CMUImage(app.brick), left, top)
+    
+    for left, top, width, height in app.itemBlocks:
+        drawImage(CMUImage(app.itemBlock), left, top)
+
 # Draws the start screen
 def drawStartScreen(app):
     drawImage(CMUImage(app.startingScreenImage), 0, 0)
@@ -390,25 +411,7 @@ def drawHealth(app):
     for i in range(app.link.health):
         drawImage(CMUImage(heart), i*50, 0)
 
-# Generates new terrain depending on how much the background has shifted
-def generateWorld(app):
-    if (app.changeInBackground <= -32):
-        generateRightCol(app)
-        app.changeInBackground = 0
-    elif (app.changeInBackground >= 32):
-        generateLeftCol(app)
-        app.changeInBackground = 0
+##########################################
 
-# Checks to see if Link has collided with enemies
-def checkEnemyCollisions(app):
-    for enemy in app.enemies:
-        if (abs(app.link.centerX - enemy.centerX) < app.link.width and
-            abs(enemy.centerY - app.link.centerY) < app.link.height):
-            app.link.health -= enemy.damage
-            app.checkEnemyTimer = 0
-        elif (abs(app.link.centerY - enemy.centerY) < app.link.height and
-              abs(enemy.centerX - app.link.centerX) < app.link.width):
-            app.link.health -= enemy.damage
-            app.checkEnemyTimer = 0
 # Runs game
 runApp(app.width, app.height)

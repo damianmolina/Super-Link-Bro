@@ -5,7 +5,6 @@ from Items import *
 import random
 
 class Link:
-
     def __init__(self, app):
         # Gets the walk and bow sprite from Link sprite sheet
         # From https://www.pngegg.com/en/png-zygrs
@@ -55,8 +54,6 @@ class Link:
         self.hasBomb = False
 
 
-
-
     def move(self, app, dx, dy):
         # Flip Link's image if he's looking the wrong way
         self.flip(dx)
@@ -101,7 +98,6 @@ class Link:
             self.topY += dy
             self.centerY += dy
 
-    
     # Checks for any horizontal collisions
     def isCollisionX(self, app, dx):
         # Goes through each block
@@ -127,7 +123,6 @@ class Link:
                 return True
         return False
         
-
     # Checks for any vertical collisions
     def isCollisionY(self, app, dy):
         for left, top, width, height in app.collisionBlocks:
@@ -292,42 +287,6 @@ class Tektite:
             self.leftX -= dx
             self.centerX -= dx
     
-    # Causes Tektite to jump
-    def jump(self):
-        self.isFalling = False
-        if (not self.isCollisionY(app, self.currVelocity + self.gravity)):
-            self.topY += self.currVelocity + self.gravity
-            self.centerY += self.currVelocity + self.gravity
-        # Once velocity is at or above zero, Tektite starts falling
-        if (self.currVelocity >= 0):
-            self.isFalling = True
-            self.isJumping = False
-        else:
-            self.currVelocity += 2
-
-    # Checking whether Link is on a ground
-    def checkGround(self):
-        if (self.topY + self.height + 1 > app.lowestFloor): 
-            self.isOnGround = True
-        else:
-            for left, top, width, height in app.allBlocks:
-                if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
-                    self.isOnGround = True
-            self.isOnGround = False
-    
-    # Falling movement
-    def fall(self):
-        if (not self.isCollisionY(app, self.gravity)):
-            self.topY += self.gravity
-            self.centerY += self.gravity
-
-        if (self.isOnGround):
-            self.gravity = 1
-            self.currVelocity = self.originalVelocity
-        else:
-            if (self.gravity < 20):
-                self.gravity += 2
-
     def isCollisionX(self, app, dx):
         # Goes through each block
         for left, top, width, height in app.allBlocks:
@@ -375,6 +334,42 @@ class Tektite:
                 self.isFalling = True
                 return True
         return False
+
+    # Causes Tektite to jump
+    def jump(self):
+        self.isFalling = False
+        if (not self.isCollisionY(app, self.currVelocity + self.gravity)):
+            self.topY += self.currVelocity + self.gravity
+            self.centerY += self.currVelocity + self.gravity
+        # Once velocity is at or above zero, Tektite starts falling
+        if (self.currVelocity >= 0):
+            self.isFalling = True
+            self.isJumping = False
+        else:
+            self.currVelocity += 2
+
+    # Checking whether Link is on a ground
+    def checkGround(self):
+        if (self.topY + self.height + 1 > app.lowestFloor): 
+            self.isOnGround = True
+        else:
+            for left, top, width, height in app.allBlocks:
+                if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
+                    self.isOnGround = True
+            self.isOnGround = False
+    
+    # Falling movement
+    def fall(self):
+        if (not self.isCollisionY(app, self.gravity)):
+            self.topY += self.gravity
+            self.centerY += self.gravity
+
+        if (self.isOnGround):
+            self.gravity = 1
+            self.currVelocity = self.originalVelocity
+        else:
+            if (self.gravity < 20):
+                self.gravity += 2
 
     # Tektites are equal to each other if they have the same x and y coordinates
     def __eq__(self, other):
@@ -441,41 +436,6 @@ class Stalfo:
         elif (not self.isCollisionX(app, -dx)):
             self.leftX -= dx
             self.centerX -= dx
-    
-    # Causes Stalfo to jump
-    def jump(self):
-        self.isFalling = False
-        if (not self.isCollisionY(app, self.currVelocity + self.gravity)):
-            self.topY += self.currVelocity + self.gravity
-            self.centerY += self.currVelocity + self.gravity
-        # Once velocity is at or above zero, Stalfo starts falling
-        if (self.currVelocity >= 0):
-            self.isFalling = True
-            self.isJumping = False
-        else:
-            self.currVelocity += 2
-
-    # Checking whether Link is on a ground
-    def checkGround(self):
-        if (self.topY + self.height + 1 > app.lowestFloor): 
-            self.isOnGround = True
-        else:
-            for left, top, width, height in app.allBlocks:
-                if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
-                    self.isOnGround = True
-            self.isOnGround = False
-    
-    # Falling movement
-    def fall(self):
-        if (not self.isCollisionY(app, self.gravity)):
-            self.topY += self.gravity
-            self.centerY += self.gravity
-        if (self.isOnGround):
-            self.gravity = 1
-            self.currVelocity = self.originalVelocity
-        else:
-            if (self.gravity < 20):
-                self.gravity += 2
 
     def isCollisionX(self, app, dx):
         # Goes through each block
@@ -524,6 +484,41 @@ class Stalfo:
                 self.isFalling = True
                 return True
         return False
+    
+    # Causes Stalfo to jump
+    def jump(self):
+        self.isFalling = False
+        if (not self.isCollisionY(app, self.currVelocity + self.gravity)):
+            self.topY += self.currVelocity + self.gravity
+            self.centerY += self.currVelocity + self.gravity
+        # Once velocity is at or above zero, Stalfo starts falling
+        if (self.currVelocity >= 0):
+            self.isFalling = True
+            self.isJumping = False
+        else:
+            self.currVelocity += 2
+
+    # Checking whether Link is on a ground
+    def checkGround(self):
+        if (self.topY + self.height + 1 > app.lowestFloor): 
+            self.isOnGround = True
+        else:
+            for left, top, width, height in app.allBlocks:
+                if (self.topY + self.height + 1 > top and left < self.centerX < left + width):
+                    self.isOnGround = True
+            self.isOnGround = False
+    
+    # Falling movement
+    def fall(self):
+        if (not self.isCollisionY(app, self.gravity)):
+            self.topY += self.gravity
+            self.centerY += self.gravity
+        if (self.isOnGround):
+            self.gravity = 1
+            self.currVelocity = self.originalVelocity
+        else:
+            if (self.gravity < 20):
+                self.gravity += 2
 
     # Stalfos are equal to each other if they have the same x and y coordinates
     def __eq__(self, other):

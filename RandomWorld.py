@@ -61,7 +61,6 @@ def randomLevel():
 
     return result
 
-
 # Creates a empty 2D list with specified rows and columns
 def createEmpty2DList():
     result = []
@@ -70,7 +69,6 @@ def createEmpty2DList():
     for _ in range(rows):
         result.append([0] * cols)
     return result
-
 
 # Transforms a column into a list
 def getColAsList(L, col):
@@ -81,6 +79,7 @@ def getColAsList(L, col):
         result.append(L[row][col])
     
     return result
+
     
 # Gets a new, randomly generates column of both bricks and item blocks
 def getBlocks(prevCol):
