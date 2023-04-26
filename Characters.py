@@ -69,13 +69,21 @@ class Link:
         if (dx > 0 and not self.isCollisionX(app, dx)):
             moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
-            app.currentScore += (abs(dx))//5
+            if (app.currentScore <= app.movementPointsLimit):
+                app.currentScore += (abs(dx))//5
+            elif (app.hasKilledEnemy):
+                app.hasKilledEnemy = False
+                app.movementPointsLimit = app.currentScore + 300
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
             moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
-            app.currentScore += ((abs(dx)))//5
+            if (app.currentScore <= app.movementPointsLimit):
+                app.currentScore += (abs(dx))//5
+            elif (app.hasKilledEnemy):
+                app.hasKilledEnemy = False
+                app.movementPointsLimit = app.currentScore + 300
         
         # Checks collisions on Y-axis
         if (not self.isCollisionY(app, dy)):

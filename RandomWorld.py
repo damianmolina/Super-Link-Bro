@@ -230,6 +230,7 @@ def moveEverything(app, dx, dy):
     # Moves items on top of item blocks
     for item in app.items:
         item.leftX += dx
+        
     # Moves tektites
     for tektite in app.tektites:
         tektite.leftX += dx
@@ -243,6 +244,7 @@ def moveEverything(app, dx, dy):
     for arrow in app.arrows:
         arrow.leftX += dx
         arrow.centerX += dx
+
     # Moves bombs
     for bomb in app.bombs:
         bomb.leftX += dx

@@ -99,6 +99,9 @@ def restartApp(app):
     # Alternates to not make the enemies move constantly
     app.switchTimer = True
 
+    app.movementPointsLimit = 300
+    app.hasKilledEnemy = False
+
     # Probability for enemies to spawn
     app.prob = random.random()
 
@@ -279,7 +282,7 @@ def onStep(app):
     
         if (app.switchTimer):
             for enemy in app.enemies:
-                # 70% chance of moving toward Link, 30% of moving away
+                # 80% chance of moving toward Link, 20% of moving away
                 if (app.prob > 0.2):
                     enemy.moveTowardLink(app, enemy.moveSpeed)
                 else:
@@ -308,6 +311,7 @@ def onStep(app):
                 app.tektites.remove(tektite)
                 # Add 100 points since Link killed them 
                 app.currentScore += 100
+                app.hasKilledEnemy = True
 
         for stalfo in app.stalfos:
             if (stalfo.isJumping):
@@ -322,6 +326,7 @@ def onStep(app):
                 app.stalfos.remove(stalfo)
                 # Add 100 points since Link killed them 
                 app.currentScore += 100
+                app.hasKilledEnemy = True
 
         # Deletes items if they are offscreen
         for item in app.items:
