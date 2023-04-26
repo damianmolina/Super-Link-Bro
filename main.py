@@ -277,7 +277,7 @@ def onStep(app):
 
         # Deletes items if they are offscreen
         for item in app.items:
-            if (item.leftX < -32 or item.leftX > 956):
+            if (item.leftX < -96 or item.leftX > 984):
                 app.items.remove(item)
 
         # 10 steps is the buffer time for Link to take damage
