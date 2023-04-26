@@ -86,7 +86,6 @@ def restartApp(app):
     app.itemBlock = Image.open('Images/ItemBlock.png')
     app.itemBlock = app.itemBlock.resize((32, 32))
 
-
     # This attribute will help determine when the background should change
     app.changeInBackground = 0
 
@@ -116,8 +115,6 @@ def restartApp(app):
     # Keeps track of the current score 
     app.currentScore = 0
     
-
-
 
 
 def redrawAll(app):

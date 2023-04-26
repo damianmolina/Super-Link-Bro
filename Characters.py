@@ -67,20 +67,30 @@ class Link:
 
         # Check if moving right and not colliding
         if (dx > 0 and not self.isCollisionX(app, dx)):
+            # Moves everything in relation to Link
             moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
+            # If movement score hasn't reached its max, its fine to continue
+            # adding points
             if (app.currentScore <= app.movementPointsLimit):
                 app.currentScore += (abs(dx))//5
+            # Otherwise, we need to make sure that the player has killed an enemy
+            # before adding more movement points
             elif (app.hasKilledEnemy):
                 app.hasKilledEnemy = False
                 app.movementPointsLimit = app.currentScore + 300
         
         # Checks if moving left and not out of bounds and is not colliding
         if (dx < 0 and not self.isCollisionX(app, dx)):
+            # Moves everything in relation to Link
             moveEverything(app, -dx, dy)
             app.changeInBackground -= dx
+            # If movement score hasn't reached its max, its fine to continue
+            # adding points
             if (app.currentScore <= app.movementPointsLimit):
                 app.currentScore += (abs(dx))//5
+            # Otherwise, we need to make sure that the player has killed an enemy
+            # before adding more movement points
             elif (app.hasKilledEnemy):
                 app.hasKilledEnemy = False
                 app.movementPointsLimit = app.currentScore + 300
@@ -382,22 +392,26 @@ class Stalfo:
         stalfo = stalfo.resize((32, 32))
         self.image = stalfo
 
+        # Determines which side of the screen the stalfo spawns
         probOfSide = random.random()
         if (probOfSide > 0.5):
             self.leftX = 928
         else:
             self.leftX = -64
         
+        # Dimensions of stalfo
         self.topY = 0
         self.width = self.height = 32
         self.centerX = self.leftX + (self.width)/2
         self.centerY = self.topY + (self.height)/2
 
+        # Charcteristics of stalfo
         self.isJumping = False
         self.isOnGround = False
         self.isFalling = True
         self.moveSpeed = 3
 
+        # Stalfo has the same jumping speed as Link
         self.originalVelocity = -20
         self.currVelocity = -20
         self.gravity = 2
@@ -408,7 +422,7 @@ class Stalfo:
         # Amount of health that a Stalfo has
         self.health = 2
     
-        # Detrmines where Link is in relation to Stalfo, then moves towards Link
+    # Determines where Link is in relation to Stalfo, then moves towards Link
     def moveTowardLink(self, app, dx):
         self.checkGround()
         if (self.leftX > app.link.leftX and not self.isCollisionX(app, -dx)):
@@ -418,7 +432,7 @@ class Stalfo:
             self.leftX += dx
             self.centerX += dx
 
-    # Detrmines where Link is in relation to Stalfo, then moves away from Link
+    # Determines where Link is in relation to Stalfo, then moves away from Link
     def moveAwayFromLink(self, app, dx):
         self.checkGround()
         if (self.leftX > app.link.leftX and not self.isCollisionX(app, dx)):
