@@ -80,7 +80,6 @@ def getColAsList(L, col):
     
     return result
 
-    
 # Gets a new, randomly generates column of both bricks and item blocks
 def getBlocks(prevCol):
     result = []
