@@ -22,7 +22,7 @@ def getRandomWorld(app):
     return floor, items, blocks
 
 # These methods are from CSAcademy exercises relating to drawing grids, however,
-# the code is modified to help fit my game
+# the code is modified to help fit the game
 def getCell(app, row, col):
     cellLeft, cellTop = getCellLeftTop(app, row, col)
     cellWidth = cellHeight = 32

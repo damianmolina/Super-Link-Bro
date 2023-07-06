@@ -15,7 +15,7 @@ def restartApp(app):
     # Screen width and height
     app.width = 896
     app.height = 448
-    app.stepsPerSecond = 15
+    app.stepsPerSecond = 14
 
     # Game begins with a start screen
     app.startScreen = True
